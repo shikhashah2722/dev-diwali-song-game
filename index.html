@@ -218,6 +218,20 @@
         color: #fff7ea; border-color: #ffc79a;
         box-shadow: 0 0 22px rgba(255, 140, 66, 0.8);
       }
+      .tile.played {
+        background: linear-gradient(180deg, #55504c, #37322f);
+        color: #a89f92;
+        border-color: rgba(253, 243, 216, 0.10);
+        opacity: 0.62;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+      .tile.played:hover { border-color: rgba(253, 243, 216, 0.10); box-shadow: none; }
+      .tile.played::after {
+        content: "\2713"; position: absolute; right: 7px; top: 3px;
+        font-size: 0.72em; color: #d9c9a3;
+      }
+      .tile:disabled { cursor: not-allowed; }
       .section-done { color: var(--cream-dim); font-size: 0.95rem; margin: 0.2rem 0 0.4rem; }
       .stage-panel { padding: 1.25rem 1.4rem 1.5rem; min-height: 30rem; }
       .stage-head { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
@@ -377,6 +391,14 @@
         border-color: #ffe9a3; box-shadow: 0 0 0 3px rgba(255, 217, 112, 0.45), 0 0 20px rgba(255, 197, 66, 0.55);
       }
       .mini-tile.gone { visibility: hidden; }
+      .mini-tile.played {
+        background: linear-gradient(180deg, #55504c, #37322f); color: #a89f92;
+        border-color: rgba(253, 243, 216, 0.10); opacity: 0.62;
+      }
+      .mini-tile.played::after {
+        content: "\2713"; position: absolute; right: 5px; top: 1px;
+        font-size: 0.8em; color: #d9c9a3;
+      }
       .mini-lines {
         text-align: center; font-family: "Rozha One", serif;
         font-size: clamp(1.2rem, 2.8vw, 1.7rem); line-height: 1.35;
@@ -544,7 +566,7 @@
           <h3>How to play</h3>
           <p>Pick a number from Easy, Medium or Hard, or hit <b>Shuffle</b>. Three famous lines from a song appear here, big enough for the whole room, translated into plain English.</p>
           <p>Read all the lines together and think of how they go in the <b>original language</b>. Teams take turns in order. The team on turn, glowing on the scoreboard, guesses first.</p>
-          <p>Scoring: <b>Easy 5 points, Medium 10 points, Hard 15 points</b>. Each song has <b>one hint</b> (the movie and year). Using it <b>halves the points</b>, rounded up: Easy 3, Medium 5, Hard 8. Every guess has a <b>30 second timer</b>. If a team misses or time runs out, the turn passes to the <b>next team</b>, who can steal for half points with a fresh 30 seconds. Picked numbers <b>disappear</b> from the board. After the reveal, the song plays from the clue line for 1 minute.</p>
+          <p>Scoring: <b>Easy 5 points, Medium 10 points, Hard 15 points</b>. Each song has <b>one hint</b> (the movie and year). Using it <b>halves the points</b>, rounded up: Easy 3, Medium 5, Hard 8. Every guess has a <b>30 second timer</b>. If a team misses or time runs out, the turn passes to the <b>next team</b>, who can steal for half points with a fresh 30 seconds. Once a song is revealed, its number is <b>ticked off and greyed out</b> on the board, so it can't be picked again. After the reveal, the song plays from the clue line for 1 minute.</p>
         </div>
         <div id="stageGame" hidden>
           <div class="stage-head">
@@ -773,12 +795,12 @@
           </div>
         </div>
         <div class="sample-step" data-step="6">
-          <h3><span class="step-no">6 of 6</span>The number disappears, the turn passes</h3>
-          <p>Either way, the picked number <b>disappears from the board completely</b>. It cannot be picked again, and the turn <b>automatically passes to the next team</b> in order:</p>
+          <h3><span class="step-no">6 of 6</span>The number is ticked off, the turn passes</h3>
+          <p>Either way, the picked number stays on the board <b>ticked off and greyed out</b>. It cannot be picked again, and the turn <b>automatically passes to the next team</b> in order:</p>
           <div class="mini-board" aria-hidden="true">
             <div class="mini-tile">1</div><div class="mini-tile">2</div><div class="mini-tile">3</div>
             <div class="mini-tile">4</div><div class="mini-tile">5</div><div class="mini-tile">6</div>
-            <div class="mini-tile gone">7</div><div class="mini-tile">8</div><div class="mini-tile">9</div>
+            <div class="mini-tile played">7</div><div class="mini-tile">8</div><div class="mini-tile">9</div>
             <div class="mini-tile">10</div><div class="mini-tile">11</div><div class="mini-tile">12</div>
           </div>
           <div class="mini-turn"><span class="turn-chip">🎯 Next turn: Team Mohanthal</span></div>
@@ -967,29 +989,29 @@
           head.appendChild(h); head.appendChild(p);
           sec.appendChild(head);
           var remaining = SONGS.map(function (s, i) { return { s: s, i: i }; }).filter(function (x) { return x.s.diff === d && !played[x.i]; });
+          var grid = document.createElement("div");
+          grid.className = "grid";
+          var num = 0;
+          SONGS.forEach(function (s, i) {
+            if (s.diff !== d) return;
+            num++;
+            var isPlayed = !!played[i];
+            var b = document.createElement("button");
+            b.type = "button";
+            b.className = "tile" + (isPlayed ? " played" : (i === current ? " current" : ""));
+            b.id = "tile-" + i;
+            b.textContent = num;
+            b.disabled = isPlayed;
+            b.setAttribute("aria-label", DIFFS[d].label + " song " + num + (isPlayed ? " (already played)" : ""));
+            b.addEventListener("click", function () { openPuzzle(i, false); });
+            grid.appendChild(b);
+          });
+          sec.appendChild(grid);
           if (remaining.length === 0) {
             var done = document.createElement("p");
             done.className = "section-done";
             done.textContent = "All " + DIFFS[d].label + " songs played.";
             sec.appendChild(done);
-          } else {
-            var grid = document.createElement("div");
-            grid.className = "grid";
-            var num = 0;
-            SONGS.forEach(function (s, i) {
-              if (s.diff !== d) return;
-              num++;
-              if (played[i]) return;
-              var b = document.createElement("button");
-              b.type = "button";
-              b.className = "tile" + (i === current ? " current" : "");
-              b.id = "tile-" + i;
-              b.textContent = num;
-              b.setAttribute("aria-label", DIFFS[d].label + " song " + num);
-              b.addEventListener("click", function () { openPuzzle(i, false); });
-              grid.appendChild(b);
-            });
-            sec.appendChild(grid);
           }
           wrap.appendChild(sec);
         });
@@ -1026,6 +1048,13 @@
         }, 100);
       }
       function openPuzzle(i, viaShuffle) {
+        if (played[i]) return;
+        if (i === current && current >= 0 && !revealed) return;
+        if (current >= 0 && current !== i && revealed && awardedTo[current] === undefined) {
+          awardedTo[current] = -1;
+          played[current] = true;
+          turnIdx = (pickerIdx + 1) % teamCount;
+        }
         stopPlayback();
         guessStopTimer();
         current = i;
@@ -1115,8 +1144,8 @@
         } else if (winner === -2 && awardedTo[current] === undefined) {
           awardedTo[current] = -1;
         }
+        played[current] = true;
         if (awardedTo[current] !== undefined) {
-          played[current] = true;
           turnIdx = (pickerIdx + 1) % teamCount;
         }
         $("ansSong").textContent = "🎵 " + s.title;
@@ -1272,7 +1301,7 @@
         var iv = setInterval(function () {
           var tiles = document.querySelectorAll(".tile.flash");
           for (var k = 0; k < tiles.length; k++) tiles[k].classList.remove("flash");
-          var avail = document.querySelectorAll(".tile");
+          var avail = document.querySelectorAll(".tile:not(.played):not(.current)");
           if (avail.length) avail[Math.floor(Math.random() * avail.length)].classList.add("flash");
           flashes++;
           if (flashes >= 14) {
