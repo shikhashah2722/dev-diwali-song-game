@@ -1,0 +1,1708 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="data:," />
+    <title>Dev-Diwali Games: Guess the Song and Jumbled Words</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Mukta:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #22060a;
+        --bg2: #35090f;
+        --panel: #3d0d16;
+        --panel2: #4a1220;
+        --gold: #e9b949;
+        --gold-bright: #ffd970;
+        --gold-dim: #9a7a2e;
+        --cream: #fdf3d8;
+        --cream-dim: #d9c9a3;
+        --marigold: #ff8c42;
+        --pink: #ff5d7e;
+        --green: #7fd08c;
+        --line: rgba(233, 185, 73, 0.35);
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      html { font-size: 100%; }
+      body {
+        margin: 0;
+        font-family: "Mukta", system-ui, sans-serif;
+        color: var(--cream);
+        background:
+          radial-gradient(1200px 600px at 50% -10%, rgba(255, 140, 66, 0.22), transparent 60%),
+          radial-gradient(900px 500px at 85% 110%, rgba(233, 185, 73, 0.12), transparent 60%),
+          linear-gradient(180deg, var(--bg2), var(--bg));
+        min-height: 100vh;
+      }
+      .toran {
+        height: 14px;
+        background-image:
+          radial-gradient(circle at 8px 6px, #ffb347 5px, transparent 6px),
+          radial-gradient(circle at 26px 8px, #ff7847 5px, transparent 6px),
+          radial-gradient(circle at 44px 6px, #7fb069 4px, transparent 5px);
+        background-size: 54px 14px;
+        background-repeat: repeat-x;
+        opacity: 0.9;
+      }
+      header.topbar {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        padding: 0.9rem 1.4rem 0.4rem;
+      }
+      .title-block { flex: 1 1 auto; min-width: 15rem; }
+      h1 {
+        font-family: "Rozha One", serif;
+        font-weight: 400;
+        font-size: clamp(1.7rem, 3.4vw, 2.9rem);
+        margin: 0;
+        color: var(--gold-bright);
+        letter-spacing: 0.5px;
+        line-height: 1.05;
+      }
+      .subtitle {
+        margin: 2px 0 0;
+        color: var(--cream-dim);
+        font-size: clamp(0.9rem, 1.4vw, 1.1rem);
+      }
+      .controls { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+      button {
+        font-family: inherit;
+        cursor: pointer;
+        border: 1px solid var(--line);
+        background: var(--panel2);
+        color: var(--cream);
+        border-radius: 0.65rem;
+        padding: 0.6rem 1.1rem;
+        font-size: 1rem;
+        font-weight: 700;
+        transition: transform 0.08s ease, background 0.15s ease, box-shadow 0.15s ease;
+      }
+      button:hover { background: #5a1830; box-shadow: var(--shadow); }
+      button:active { transform: scale(0.97); }
+      button:disabled { opacity: 0.45; cursor: default; box-shadow: none; }
+      button.gold {
+        background: linear-gradient(180deg, #f3cd68, #d9a72e);
+        color: #3a1503;
+        border-color: #f7e08a;
+      }
+      button.gold:hover { background: linear-gradient(180deg, #ffd970, #e3b83a); }
+      button.big { font-size: 1.15rem; padding: 0.85rem 1.6rem; border-radius: 0.75rem; }
+      .team-count, .font-count {
+        display: flex; align-items: center; gap: 0.4rem;
+        background: var(--panel); border: 1px solid var(--line);
+        border-radius: 0.75rem; padding: 0.45rem 0.6rem;
+      }
+      .team-count span, .font-count span { font-weight: 800; color: var(--cream-dim); font-size: 0.95rem; margin-right: 2px; }
+      .team-count button, .font-count button { padding: 0.45rem 0.9rem; border-radius: 0.5rem; font-size: 1.05rem; }
+      .team-count button.active, .font-count button.active {
+        background: linear-gradient(180deg, #f3cd68, #d9a72e);
+        color: #3a1503; border-color: #f7e08a;
+      }
+      .scoreboard {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.75rem;
+        padding: 0.75rem 1.4rem 0.25rem;
+      }
+      .scoreboard.t4 { grid-template-columns: repeat(4, 1fr); }
+      .team {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-top: 5px solid var(--team, var(--gold));
+        border-radius: 0.75rem;
+        padding: 0.6rem 0.75rem 0.75rem;
+        text-align: center;
+        box-shadow: var(--shadow);
+      }
+      .team input {
+        width: 100%;
+        background: transparent;
+        border: none;
+        border-bottom: 1px dashed transparent;
+        color: var(--cream);
+        font-family: inherit;
+        font-weight: 800;
+        font-size: clamp(0.95rem, 1.6vw, 1.25rem);
+        text-align: center;
+        padding: 2px 0;
+      }
+      .team input:focus { outline: none; border-bottom-color: var(--gold); }
+      .team .score {
+        font-family: "Rozha One", serif;
+        font-size: clamp(1.8rem, 3.4vw, 2.8rem);
+        color: var(--gold-bright);
+        line-height: 1.1;
+      }
+      .team .adj { display: flex; justify-content: center; gap: 0.5rem; margin-top: 4px; }
+      .team .adj button { padding: 2px 0.9rem; font-size: 1.05rem; border-radius: 0.5rem; }
+      .team.turn {
+        box-shadow: 0 0 0 2px var(--team, var(--gold)), 0 0 26px rgba(255, 217, 112, 0.4), var(--shadow);
+      }
+      .team .turn-tag {
+        display: none; width: fit-content; margin: 3px auto 1px;
+        font-size: 0.7rem; font-weight: 800; letter-spacing: 0.12em;
+        color: #3a1503; background: linear-gradient(180deg, #f3cd68, #d9a72e);
+        border-radius: 999px; padding: 1px 0.6rem;
+      }
+      .team.turn .turn-tag { display: block; }
+      main.layout {
+        display: grid;
+        grid-template-columns: minmax(300px, 5fr) 7fr;
+        gap: 1.1rem;
+        padding: 0.9rem 1.4rem 1.6rem;
+        align-items: start;
+      }
+      .board-panel, .stage-panel {
+        background: rgba(61, 13, 22, 0.75);
+        border: 1px solid var(--line);
+        border-radius: 1rem;
+        box-shadow: var(--shadow);
+      }
+      .board-panel { padding: 1rem; }
+      .board-head {
+        display: flex; justify-content: space-between; align-items: baseline; gap: 0.6rem;
+        margin-bottom: 0.75rem;
+      }
+      .board-head h2, .stage-head h2 {
+        font-family: "Rozha One", serif; font-weight: 400; margin: 0;
+        color: var(--gold-bright); font-size: 1.3rem;
+      }
+      .board-head .left-count { color: var(--cream-dim); font-size: 0.95rem; }
+      .diff-section { margin-bottom: 1rem; }
+      .diff-section:last-child { margin-bottom: 0; }
+      .diff-head {
+        display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .diff-head h3 { margin: 0; font-size: 1.1rem; font-weight: 800; }
+      .diff-head .pts { font-size: 0.9rem; font-weight: 800; border-radius: 999px; padding: 2px 0.7rem; color: #3a1503; }
+      .diff-easy h3 { color: var(--green); }
+      .diff-medium h3 { color: var(--gold-bright); }
+      .diff-hard h3 { color: var(--pink); }
+      .diff-easy .pts { background: var(--green); }
+      .diff-medium .pts { background: var(--gold-bright); }
+      .diff-hard .pts { background: var(--pink); }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.55rem;
+      }
+      .tile {
+        aspect-ratio: 1 / 1;
+        font-size: clamp(1.05rem, 2vw, 1.5rem);
+        font-weight: 800;
+        border-radius: 0.75rem;
+        background: linear-gradient(180deg, #57182c, #43101f);
+        border: 1px solid var(--line);
+        color: var(--cream);
+        display: flex; align-items: center; justify-content: center;
+        padding: 0;
+        position: relative;
+      }
+      .tile:hover { border-color: var(--gold-bright); }
+      .tile.current {
+        background: linear-gradient(180deg, #f3cd68, #d9a72e);
+        color: #3a1503;
+        border-color: #ffe9a3;
+        box-shadow: 0 0 0 3px rgba(255, 217, 112, 0.45), 0 0 26px rgba(255, 197, 66, 0.55);
+      }
+      .tile.flash {
+        background: linear-gradient(180deg, #ff8c42, #e56b1f);
+        color: #fff7ea; border-color: #ffc79a;
+        box-shadow: 0 0 22px rgba(255, 140, 66, 0.8);
+      }
+      .section-done { color: var(--cream-dim); font-size: 0.95rem; margin: 0.2rem 0 0.4rem; }
+      .stage-panel { padding: 1.25rem 1.4rem 1.5rem; min-height: 30rem; }
+      .stage-head { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+      .worth {
+        font-weight: 800; color: #3a1503;
+        background: linear-gradient(180deg, #f3cd68, #d9a72e);
+        border-radius: 999px; padding: 5px 1rem; font-size: 1.05rem;
+        white-space: nowrap;
+      }
+      .turn-chip {
+        font-weight: 800; font-size: 0.98rem; color: var(--cream);
+        border: 1.5px solid var(--gold); border-radius: 999px;
+        padding: 5px 1rem; background: rgba(233, 185, 73, 0.10);
+        white-space: nowrap;
+      }
+      .turn-chip.steal { border-color: var(--pink); background: rgba(255, 93, 126, 0.14); }
+      .keyline {
+        text-align: center;
+        font-family: "Rozha One", serif;
+        font-size: clamp(1.45rem, 3.4vw, 2.5rem);
+        line-height: 1.35;
+        color: var(--cream);
+        padding: 1.4rem 0.9rem 0.5rem;
+        max-width: 52ch;
+        margin: 0 auto;
+      }
+      .keyline .song-line { display: block; padding: 5px 0; }
+      .keyline .song-line + .song-line { border-top: 1px dashed rgba(233, 185, 73, 0.22); }
+      .keyline .song-line:first-child::before { content: "\201C  "; color: var(--gold); }
+      .keyline .song-line:last-child::after { content: "  \201D"; color: var(--gold); }
+      .keyline-label {
+        text-align: center; color: var(--marigold); font-weight: 800;
+        font-size: 0.82rem; letter-spacing: 0.14em; text-transform: uppercase;
+        margin: 0.9rem 0 0;
+      }
+      .stage-note { text-align: center; color: var(--cream-dim); font-size: 1.05rem; margin: 4px 0 0; }
+      .hint-area { min-height: 3.5rem; margin-top: 0.9rem; display: grid; gap: 0.6rem; }
+      .hint-box {
+        border: 1px dashed var(--gold-dim);
+        background: rgba(233, 185, 73, 0.07);
+        border-radius: 0.75rem;
+        padding: 0.6rem 1rem;
+        font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+        display: none;
+      }
+      .hint-box.show { display: block; }
+      .hint-box .hint-label {
+        display: block; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.14em;
+        text-transform: uppercase; color: var(--marigold); margin-bottom: 2px;
+      }
+      .guess-timer { max-width: 34rem; margin: 1rem auto 0; text-align: center; }
+      .guess-timer .t-num { font-family: "Rozha One", serif; font-size: clamp(2.2rem, 5vw, 3.2rem); color: var(--gold-bright); line-height: 1; }
+      .guess-timer .t-num.low { color: var(--pink); }
+      .guess-timer .t-label { color: var(--cream-dim); font-weight: 700; font-size: 0.95rem; margin-top: 2px; }
+      .stage-actions {
+        display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem;
+      }
+      .answer { display: none; text-align: center; margin-top: 1.1rem; }
+      .answer.show { display: block; animation: pop 0.35s ease; }
+      @keyframes pop { from { transform: scale(0.94); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+      .answer .song {
+        font-family: "Rozha One", serif;
+        font-size: clamp(1.9rem, 4.4vw, 3.2rem);
+        color: var(--gold-bright); margin: 0; line-height: 1.1;
+      }
+      .answer .movie { color: var(--cream-dim); font-size: clamp(1rem, 2vw, 1.3rem); margin: 4px 0 0; }
+      .answer .lyric {
+        font-size: clamp(1.15rem, 2.4vw, 1.6rem); font-style: italic;
+        margin: 0.9rem auto 0; max-width: 46ch; color: var(--cream);
+      }
+      .answer .words {
+        margin: 0.75rem auto 0; max-width: 60ch; color: var(--cream-dim);
+        font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+      }
+      .answer .words b { color: var(--marigold); font-weight: 800; }
+      .player-wrap { display: none; margin: 1.1rem auto 0; max-width: 40rem; }
+      .player-wrap.show { display: block; }
+      .player-frame {
+        position: relative; width: 100%; aspect-ratio: 16 / 9;
+        border-radius: 0.75rem; overflow: hidden; border: 1px solid var(--line);
+        background: #000;
+      }
+      .player-frame iframe, .player-frame > div { position: absolute; inset: 0; width: 100%; height: 100%; }
+      .countdown { margin-top: 0.75rem; display: none; }
+      .countdown.show { display: block; }
+      .countdown .bar {
+        height: 0.75rem; border-radius: 999px; background: rgba(253, 243, 216, 0.15); overflow: hidden;
+      }
+      .countdown .fill {
+        height: 100%; width: 100%;
+        background: linear-gradient(90deg, var(--marigold), var(--gold-bright));
+        transition: width 0.25s linear;
+      }
+      .countdown .time {
+        text-align: center; font-weight: 800; font-size: 1.15rem; margin-top: 6px; color: var(--gold-bright);
+      }
+      .award { display: none; margin-top: 1.25rem; text-align: center; }
+      .award.show { display: block; }
+      .award p { margin: 0 0 0.6rem; font-weight: 700; font-size: 1.1rem; }
+      .award .row { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
+      .award .done-note { color: var(--marigold); font-weight: 800; font-size: 1.15rem; }
+      .yt-note { text-align: center; margin-top: 0.6rem; font-size: 0.95rem; color: var(--cream-dim); }
+      .yt-note a { color: var(--gold-bright); }
+      .idle { text-align: center; padding: 1.9rem 0.6rem 0.6rem; }
+      .idle .big-diya { font-size: 3.4rem; }
+      .idle h3 { font-family: "Rozha One", serif; font-weight: 400; font-size: clamp(1.5rem, 3vw, 2.2rem); color: var(--gold-bright); margin: 0.6rem 0 0.4rem; }
+      .idle p { color: var(--cream-dim); font-size: clamp(1rem, 1.8vw, 1.25rem); max-width: 52ch; margin: 0.5rem auto; line-height: 1.55; }
+      .idle p b { color: var(--cream); }
+      footer.host-tip {
+        padding: 0 1.4rem 1.4rem; color: var(--cream-dim); font-size: 0.98rem; text-align: center;
+      }
+      footer.host-tip b { color: var(--gold-bright); }
+      .sample-backdrop {
+        position: fixed; inset: 0; z-index: 60;
+        background: rgba(16, 2, 5, 0.82);
+        display: none; align-items: flex-start; justify-content: center;
+        overflow-y: auto; padding: 1.4rem 0.9rem;
+      }
+      .sample-backdrop.open { display: flex; }
+      .sample-card {
+        background: linear-gradient(180deg, var(--panel2), var(--panel));
+        border: 1px solid var(--gold-dim);
+        border-radius: 1.1rem; box-shadow: var(--shadow);
+        width: min(94vw, 48rem);
+        max-height: none;
+        padding: 1.4rem 1.6rem 1.5rem; margin: auto 0;
+        font-size: 1rem;
+      }
+      .sample-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; }
+      .sample-head h2 {
+        font-family: "Rozha One", serif; font-weight: 400; margin: 0;
+        color: var(--gold-bright); font-size: clamp(1.4rem, 3vw, 1.9rem);
+      }
+      .sample-head .sample-sub { margin: 4px 0 0; color: var(--cream-dim); font-size: 0.98rem; }
+      .sample-close { flex: 0 0 auto; padding: 6px 0.9rem; font-size: 1.1rem; line-height: 1; }
+      .sample-step { display: none; margin-top: 1rem; }
+      .sample-step.show { display: block; }
+      .sample-step h3 { margin: 0 0 6px; font-size: 1.25rem; color: var(--cream); }
+      .sample-step h3 .step-no {
+        color: #3a1503; background: linear-gradient(180deg, #f3cd68, #d9a72e);
+        border-radius: 999px; padding: 1px 0.7rem; font-size: 0.9rem; font-weight: 800; margin-right: 0.5rem;
+      }
+      .sample-step p { margin: 6px 0 0; color: var(--cream-dim); font-size: 1.05rem; line-height: 1.55; }
+      .sample-step p b { color: var(--cream); }
+      .mini-board {
+        display: grid; grid-template-columns: repeat(6, 1fr); gap: 7px;
+        max-width: 26rem; margin: 0.9rem auto 4px;
+      }
+      .mini-tile {
+        aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
+        border-radius: 9px; font-weight: 800; font-size: 1.05rem; position: relative;
+        background: linear-gradient(180deg, #57182c, #43101f);
+        border: 1px solid var(--line); color: var(--cream);
+      }
+      .mini-tile.pick {
+        background: linear-gradient(180deg, #f3cd68, #d9a72e); color: #3a1503;
+        border-color: #ffe9a3; box-shadow: 0 0 0 3px rgba(255, 217, 112, 0.45), 0 0 20px rgba(255, 197, 66, 0.55);
+      }
+      .mini-tile.gone { visibility: hidden; }
+      .mini-lines {
+        text-align: center; font-family: "Rozha One", serif;
+        font-size: clamp(1.2rem, 2.8vw, 1.7rem); line-height: 1.35;
+        padding: 0.6rem 0.5rem 2px; max-width: 46ch; margin: 0 auto;
+      }
+      .mini-lines span { display: block; padding: 4px 0; }
+      .mini-lines span + span { border-top: 1px dashed rgba(233, 185, 73, 0.22); }
+      .mini-answer { text-align: center; margin-top: 0.5rem; }
+      .mini-answer .song {
+        font-family: "Rozha One", serif; font-size: clamp(1.6rem, 3.6vw, 2.3rem);
+        color: var(--gold-bright); margin: 0; line-height: 1.1;
+      }
+      .mini-answer .movie { color: var(--cream-dim); margin: 4px 0 0; }
+      .mini-answer .lyric { font-style: italic; margin: 0.6rem auto 0; max-width: 44ch; font-size: 1.1rem; }
+      .outcome-row { display: grid; gap: 0.6rem; margin-top: 0.9rem; }
+      .outcome {
+        border: 1px solid var(--line); border-radius: 0.75rem; padding: 0.6rem 0.9rem;
+        background: rgba(253, 243, 216, 0.05); font-size: 1.05rem;
+      }
+      .outcome b { color: var(--gold-bright); }
+      .outcome.steal { border-color: rgba(255, 93, 126, 0.55); background: rgba(255, 93, 126, 0.10); }
+      .mini-turn { text-align: center; margin-top: 0.9rem; }
+      .mini-turn .turn-chip { display: inline-block; }
+      .sample-nav {
+        display: flex; align-items: center; justify-content: space-between; gap: 0.6rem;
+        margin-top: 1.25rem; flex-wrap: wrap;
+      }
+      .sample-dots { display: flex; gap: 7px; }
+      .sample-dots i {
+        width: 10px; height: 10px; border-radius: 50%;
+        background: rgba(253, 243, 216, 0.25); display: block;
+      }
+      .sample-dots i.on { background: var(--gold-bright); }
+      .sample-count { color: var(--cream-dim); font-size: 0.95rem; font-weight: 700; }
+      .tabs { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; padding: 0.75rem 1.4rem 0; }
+      .tab { font-size: 1.12rem; font-weight: 800; padding: 0.75rem 1.75rem; border-radius: 999px; }
+      .tab.active {
+        background: linear-gradient(180deg, #f3cd68, #d9a72e);
+        color: #3a1503; border-color: #f7e08a;
+      }
+      .contents { display: contents; }
+      [hidden] { display: none !important; }
+      .j-row { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem; border-radius: 0.75rem; }
+      .j-row + .j-row { margin-top: 4px; }
+      .j-row.turn { background: rgba(233, 185, 73, 0.09); box-shadow: inset 0 0 0 1px var(--line); }
+      .j-row-name { flex: 0 1 34%; font-weight: 800; font-size: 0.98rem; display: flex; align-items: center; gap: 7px; min-width: 0; }
+      .j-dot { flex: 0 0 auto; width: 12px; height: 12px; border-radius: 50%; background: var(--team, var(--gold)); }
+      .j-tiles { display: flex; gap: 7px; flex: 1 1 auto; }
+      .j-tile {
+        flex: 1 1 0; max-width: 54px; aspect-ratio: 1 / 1; border-radius: 0.65rem;
+        font-weight: 800; font-size: 1.05rem; padding: 0; position: relative;
+        background: linear-gradient(180deg, #57182c, #43101f);
+        border: 1px solid var(--line); color: var(--cream);
+        display: flex; align-items: center; justify-content: center;
+      }
+      .j-tile.avail { border-color: var(--gold-bright); box-shadow: 0 0 12px rgba(255, 197, 66, 0.35); }
+      .j-tile.open-now { background: linear-gradient(180deg, #f3cd68, #d9a72e); color: #3a1503; border-color: #ffe9a3; }
+      .j-tile.played {
+        background: linear-gradient(180deg, #55504c, #37322f); color: #a89f92;
+        border-color: rgba(253, 243, 216, 0.10); opacity: 0.6; cursor: not-allowed; box-shadow: none;
+      }
+      .j-tile.played::after { content: "\2713"; position: absolute; right: 5px; top: 1px; font-size: 0.8em; color: #d9c9a3; }
+      .j-tile:disabled { cursor: not-allowed; }
+      .j-board-note { color: var(--cream-dim); font-size: 0.95rem; margin: 0.75rem 2px 0; }
+      .jumble-word { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; padding: 1.9rem 0.5rem 4px; }
+      .j-letter {
+        width: clamp(42px, 6.5vw, 62px); aspect-ratio: 1 / 1;
+        display: flex; align-items: center; justify-content: center;
+        font-family: "Rozha One", serif; font-size: clamp(1.5rem, 3.2vw, 2.3rem);
+        color: var(--gold-bright);
+        background: linear-gradient(180deg, #57182c, #43101f);
+        border: 1px solid var(--line); border-radius: 0.75rem; box-shadow: var(--shadow);
+      }
+      .j-clue { text-align: center; font-size: clamp(1.1rem, 2vw, 1.45rem); color: var(--cream); max-width: 52ch; margin: 1rem auto 0; line-height: 1.5; }
+      .j-clue .hint-label {
+        display: block; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.14em;
+        text-transform: uppercase; color: var(--marigold); margin-bottom: 2px;
+      }
+      .j-timer { max-width: 32.5rem; margin: 1.4rem auto 0; text-align: center; }
+      .j-timer-num { font-family: "Rozha One", serif; font-size: clamp(2.6rem, 6vw, 4rem); color: var(--gold-bright); line-height: 1; }
+      .j-timer-num.low { color: var(--pink); animation: jpulse 0.5s ease-in-out infinite alternate; }
+      @keyframes jpulse { from { transform: scale(1); } to { transform: scale(1.12); } }
+      .j-timer .countdown { display: block; margin-top: 0.6rem; }
+      .j-status { text-align: center; color: var(--cream-dim); font-size: 1.05rem; margin: 0.9rem 0 0; min-height: 1.4em; }
+      .j-status b { color: var(--cream); }
+      .stand-row {
+        display: flex; justify-content: space-between; align-items: center; gap: 0.6rem;
+        max-width: 30rem; margin: 0.5rem auto; padding: 0.6rem 1rem;
+        border: 1px solid var(--line); border-radius: 0.75rem;
+        background: rgba(253, 243, 216, 0.05); font-size: 1.12rem;
+      }
+      .stand-row .pts { font-family: "Rozha One", serif; color: var(--gold-bright); font-size: 1.4rem; }
+      .stand-row.winner { border-color: var(--gold-bright); background: rgba(233, 185, 73, 0.13); font-weight: 800; }
+      .mini-timer { max-width: 21rem; margin: 0.9rem auto 0; }
+      .mini-timer .bar { height: 0.75rem; border-radius: 999px; background: rgba(253, 243, 216, 0.15); overflow: hidden; }
+      .mini-timer .fill { height: 100%; width: 60%; background: linear-gradient(90deg, var(--marigold), var(--gold-bright)); }
+      .mini-timer .t { text-align: center; font-weight: 800; color: var(--gold-bright); margin-top: 5px; }
+      @media (max-width: 900px) {
+        .scoreboard { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; padding: 0.6rem 0.75rem 2px; }
+        .scoreboard .team:last-child { grid-column: span 2; }
+        .scoreboard.t4 .team:last-child { grid-column: auto; }
+        .team { padding: 7px 8px 9px; }
+        .team input { font-size: 1rem; }
+        .team .adj button { padding: 1px 9px; }
+        main.layout { grid-template-columns: 1fr; padding: 0.75rem 0.75rem 1.25rem; }
+        header.topbar { padding: 0.75rem 0.75rem 4px; }
+        .stage-panel { min-height: 0; }
+        .grid { grid-template-columns: repeat(5, 1fr); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .answer.show { animation: none; }
+        button { transition: none; }
+        .j-timer-num.low { animation: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toran" aria-hidden="true"></div>
+    <header class="topbar">
+      <div class="title-block">
+        <h1>🪔 Dev-Diwali Games</h1>
+        <p class="subtitle">Both party games in one place: Guess the Song and Diwali Jumbled Words, with the same teams and one shared scoreboard. Pick a game below!</p>
+      </div>
+      <div class="controls">
+        <div class="team-count" role="group" aria-label="Number of teams">
+          <span>Teams</span>
+          <button id="teams4Btn" type="button">4</button>
+          <button id="teams5Btn" type="button" class="active">5</button>
+        </div>
+        <div class="font-count" role="group" aria-label="Text size">
+          <span>Text size</span>
+          <button id="fontSBtn" type="button">A-</button>
+          <button id="fontMBtn" type="button" class="active">A</button>
+          <button id="fontLBtn" type="button">A+</button>
+        </div>
+        <div class="contents" id="songControls">
+          <button id="sampleBtn" class="gold big" type="button">🪔 How to play: sample round</button>
+          <button id="shuffleBtn" class="gold big" type="button">🎲 Shuffle: pick for us!</button>
+          <button id="resetBtn" type="button">↺ Reset game</button>
+        </div>
+        <div class="contents" id="jumbleControls" hidden>
+          <button id="jSampleBtn" class="gold big" type="button">🪔 How to play: sample round</button>
+          <button id="jResetBtn" type="button">↺ Reset words</button>
+        </div>
+        <button id="fsBtn" type="button">⛶ Fullscreen</button>
+      </div>
+    </header>
+    <nav class="tabs" aria-label="Choose a game">
+      <button id="tabSong" class="tab active" type="button">🎶 Guess the Song</button>
+      <button id="tabJumble" class="tab" type="button">🔤 Jumbled Words</button>
+    </nav>
+    <section class="scoreboard" id="scoreboard" aria-label="Team scores"></section>
+    <div id="songView">
+    <main class="layout">
+      <section class="board-panel" aria-label="Song board">
+        <div class="board-head">
+          <h2>Pick a number</h2>
+          <span class="left-count" id="leftCount"></span>
+        </div>
+        <div id="boardSections"></div>
+      </section>
+      <section class="stage-panel" aria-label="Stage">
+        <div id="stageIdle" class="idle">
+          <div class="big-diya" aria-hidden="true">🪔🎶🪔</div>
+          <h3>How to play</h3>
+          <p>Pick a number from Easy, Medium or Hard, or hit <b>Shuffle</b>. Three famous lines from a song appear here, big enough for the whole room, translated into plain English.</p>
+          <p>Read all the lines together and think of how they go in the <b>original language</b>. Teams take turns in order. The team on turn, glowing on the scoreboard, guesses first.</p>
+          <p>Scoring: <b>Easy 5 points, Medium 10 points, Hard 15 points</b>. Each song has <b>one hint</b> (the movie and year). Using it <b>halves the points</b>, rounded up: Easy 3, Medium 5, Hard 8. Every guess has a <b>30 second timer</b>. If a team misses or time runs out, the turn passes to the <b>next team</b>, who can steal for half points with a fresh 30 seconds. Picked numbers <b>disappear</b> from the board. After the reveal, the song plays from the clue line for 1 minute.</p>
+        </div>
+        <div id="stageGame" hidden>
+          <div class="stage-head">
+            <h2 id="stageTitle">Puzzle</h2>
+            <span class="turn-chip" id="turnChip" hidden></span>
+            <span class="worth" id="worthBadge">Worth 5 pts</span>
+          </div>
+          <p class="keyline-label" id="keylineLabel">3 lines, in English</p>
+          <div class="keyline" id="stageLine"></div>
+          <p class="stage-note" id="stageNote">Which song are these lines from?</p>
+          <div class="guess-timer" id="guessTimer">
+            <div class="t-num" id="guessTimeNum">30</div>
+            <div class="countdown show"><div class="bar"><div class="fill" id="guessFill"></div></div></div>
+            <div class="t-label" id="guessTimerLabel">seconds to guess</div>
+          </div>
+          <div class="hint-area">
+            <div class="hint-box" id="hintBox"><span class="hint-label">Hint: the movie</span><span id="hintText"></span></div>
+          </div>
+          <div class="stage-actions" id="preRevealActions">
+            <button id="hintBtn" type="button">💡 Use the one hint (points halved)</button>
+            <button id="correctBtn" class="gold" type="button">✅ Correct!</button>
+            <button id="missBtn" type="button">😬 Missed: pass to next team</button>
+            <button id="revealBtn" type="button">🎉 Reveal the song</button>
+          </div>
+          <div class="answer" id="answer">
+            <p class="song" id="ansSong"></p>
+            <p class="movie" id="ansMovie"></p>
+            <p class="lyric" id="ansLyric"></p>
+            <p class="words" id="ansWords"></p>
+            <div class="stage-actions">
+              <button id="playBtn" class="gold big" type="button">▶ Play from the clue line (1 minute)</button>
+              <button id="stopBtn" type="button" hidden>⏹ Stop</button>
+            </div>
+            <p class="yt-note" id="ytNote"></p>
+            <div class="player-wrap" id="playerWrap">
+              <div class="player-frame"><div id="ytPlayer"></div></div>
+              <div class="countdown" id="countdown">
+                <div class="bar"><div class="fill" id="cdFill"></div></div>
+                <div class="time" id="cdTime">1:00</div>
+              </div>
+            </div>
+            <div class="award" id="award">
+              <p id="awardPrompt"></p>
+              <div class="row" id="awardRow"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="host-tip">
+      <b>Host tip:</b> shout the rule before Round 1: “The 3 lines on screen are the song's most famous lines, translated flat into English. Read them all together and think of how they go in the original!” 🪔
+    </footer>
+    </div>
+    <div id="jumbleView" hidden>
+      <main class="layout">
+        <section class="board-panel" aria-label="Jumbled words board">
+          <div class="board-head">
+            <h2>Words by team</h2>
+            <span class="left-count" id="jLeftCount"></span>
+          </div>
+          <div id="jBoard"></div>
+          <p class="j-board-note">Every team has its own set of 5 Diwali words. On a team's turn, tap one of its glowing words to play it.</p>
+        </section>
+        <section class="stage-panel" aria-label="Jumbled word stage">
+          <div id="jStageIdle" class="idle">
+            <div class="big-diya" aria-hidden="true">🪔🔤🪔</div>
+            <h3>How to play</h3>
+            <p>The team on turn picks one of its words. The word appears here <b>all jumbled up</b>, with a clue, and a <b>15 second timer</b> starts ticking!</p>
+            <p>Shout the real word before time runs out: a correct answer scores <b>10 points</b>. Miss it, or let the clock beat you, and the word <b>passes to the next team</b>, who get a fresh 15 seconds to steal it for <b>5 points</b>. It keeps passing until someone gets it or every team has had a try.</p>
+            <p>Answered words tick off on the board. When every word is done, the team with the most points wins the dhamaka! 🏆</p>
+          </div>
+          <div id="jStageGame" hidden>
+            <div class="stage-head">
+              <h2 id="jStageTitle">Jumbled word</h2>
+              <span class="turn-chip" id="jTurnChip"></span>
+              <span class="worth" id="jWorth">Worth 10 pts</span>
+            </div>
+            <div class="jumble-word" id="jWord" aria-label="Jumbled word"></div>
+            <p class="j-clue"><span class="hint-label">Clue</span><span id="jClue"></span></p>
+            <div class="j-timer">
+              <div class="j-timer-num" id="jTimeNum">15</div>
+              <div class="countdown"><div class="bar"><div class="fill" id="jFill"></div></div></div>
+            </div>
+            <p class="j-status" id="jStatus"></p>
+            <div class="stage-actions" id="jActions">
+              <button id="jPauseBtn" type="button">⏸ Pause</button>
+              <button id="jCorrectBtn" class="gold" type="button">✅ Correct!</button>
+              <button id="jPassBtn" type="button">⏭ Missed: pass it on</button>
+            </div>
+            <div class="answer" id="jAnswer">
+              <p class="song" id="jAnsWord"></p>
+              <p class="movie" id="jAnsNote"></p>
+              <div class="stage-actions">
+                <button id="jNextBtn" class="gold big" type="button">▶ Next word</button>
+              </div>
+            </div>
+          </div>
+          <div id="jFinal" hidden>
+            <div class="idle">
+              <div class="big-diya" aria-hidden="true">🏆🪔🏆</div>
+              <h3 id="jFinalTitle">Final standings</h3>
+              <div id="jStandings"></div>
+              <p>Well played, everyone! Switch to the song game tab, or reset the words and go again.</p>
+              <div class="stage-actions">
+                <button id="jAgainBtn" class="gold big" type="button">↺ Play jumbled words again</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer class="host-tip">
+        <b>Host tip:</b> read the clue out loud the moment the word opens. 15 seconds fly by, and the whole room will start shouting along! 🪔
+      </footer>
+    </div>
+    <div class="sample-backdrop" id="jSampleBackdrop" role="dialog" aria-modal="true" aria-labelledby="jSampleTitle">
+      <div class="sample-card">
+        <div class="sample-head">
+          <div>
+            <h2 id="jSampleTitle">🪔 Sample round: jumbled words</h2>
+            <p class="sample-sub">A quick walkthrough with a practice word that is not on the real board. Watching it changes nothing: no scores move, no word gets used up.</p>
+          </div>
+          <button class="sample-close" id="jSampleCloseBtn" type="button" aria-label="Close sample round">✕</button>
+        </div>
+        <div class="sample-step" data-jstep="1">
+          <h3><span class="step-no">1 of 5</span>The team on turn picks a word</h3>
+          <p>Each team has <b>its own set of 5 Diwali words</b> on the board. The team whose turn it is, glowing on the scoreboard, taps one of its glowing words. Say it is Team Jalebi's turn and they pick their word 2:</p>
+          <div class="j-row turn" style="margin-top:14px" aria-hidden="true">
+            <div class="j-row-name"><span class="j-dot" style="--team:#ff8c42"></span>Team Jalebi</div>
+            <div class="j-tiles">
+              <div class="j-tile played">1</div><div class="j-tile open-now">2</div><div class="j-tile avail">3</div><div class="j-tile avail">4</div><div class="j-tile avail">5</div>
+            </div>
+          </div>
+        </div>
+        <div class="sample-step" data-jstep="2">
+          <h3><span class="step-no">2 of 5</span>The jumbled word appears: 15 seconds!</h3>
+          <p>The word opens on the big screen with its <b>letters all mixed up</b>, plus a clue. The <b>15 second timer</b> starts right away:</p>
+          <div class="jumble-word" style="padding-top:16px" aria-hidden="true">
+            <span class="j-letter">W</span><span class="j-letter">O</span><span class="j-letter">R</span><span class="j-letter">K</span><span class="j-letter">F</span><span class="j-letter">I</span><span class="j-letter">R</span><span class="j-letter">E</span>
+          </div>
+          <p class="j-clue"><span class="hint-label">Clue</span>It bursts open in the night sky in a shower of colour.</p>
+          <div class="mini-timer" aria-hidden="true">
+            <div class="bar"><div class="fill"></div></div>
+            <div class="t">9 seconds left ⏱️</div>
+          </div>
+        </div>
+        <div class="sample-step" data-jstep="3">
+          <h3><span class="step-no">3 of 5</span>Shout it in time: 10 points!</h3>
+          <p>Team Jalebi unscrambles the letters, shouts the word before the clock runs out, and the host taps <b>✅ Correct!</b>:</p>
+          <div class="mini-answer" aria-hidden="true">
+            <p class="song">🎆 FIREWORK</p>
+            <p class="movie">Team Jalebi got it: <b>+10 points!</b></p>
+          </div>
+          <p>The answer is revealed on the big screen and the points land on the shared scoreboard.</p>
+        </div>
+        <div class="sample-step" data-jstep="4">
+          <h3><span class="step-no">4 of 5</span>Miss it? The word passes on!</h3>
+          <p>If the team guesses wrong, or the 15 seconds run out, the word does not die. It <b>passes to the next team</b>:</p>
+          <div class="outcome-row">
+            <div class="outcome steal">🚨 <b>Steal chance</b>: the next team gets the same jumbled word with a <b>fresh 15 seconds</b>, and can steal it for <b>5 points</b>.</div>
+            <div class="outcome">🔁 Still stuck? It <b>keeps passing</b> from team to team until someone gets it, or every team has had a try, and the host reveals the answer with no points.</div>
+          </div>
+        </div>
+        <div class="sample-step" data-jstep="5">
+          <h3><span class="step-no">5 of 5</span>The word ticks off, the turn passes</h3>
+          <p>Either way, the word is now <b>ticked off</b> on the board, it cannot be played again, and the turn moves to the <b>next team</b> and their words:</p>
+          <div class="mini-turn"><span class="turn-chip">🎯 Next turn: Team Mohanthal</span></div>
+          <p>Keep going until every word on the board is ticked off. The team with the most points wins the dhamaka! 🏆</p>
+        </div>
+        <div class="sample-nav">
+          <button id="jSampleBackBtn" type="button">← Back</button>
+          <div class="sample-dots" id="jSampleDots" aria-hidden="true"></div>
+          <span class="sample-count" id="jSampleCount"></span>
+          <button id="jSampleNextBtn" class="gold" type="button">Next →</button>
+        </div>
+      </div>
+    </div>
+    <div class="sample-backdrop" id="sampleBackdrop" role="dialog" aria-modal="true" aria-labelledby="sampleTitle">
+      <div class="sample-card">
+        <div class="sample-head">
+          <div>
+            <h2 id="sampleTitle">🪔 Sample round: how a round goes</h2>
+            <p class="sample-sub">Just a walkthrough with a practice song that is not on the real board. Watching it changes nothing: no scores move, no song gets used up.</p>
+          </div>
+          <button class="sample-close" id="sampleCloseBtn" type="button" aria-label="Close sample round">✕</button>
+        </div>
+        <div class="sample-step" data-step="1">
+          <h3><span class="step-no">1 of 6</span>A team picks a section and a number</h3>
+          <p>The team whose turn it is, glowing on the scoreboard with an “ON TURN” tag, picks a number from <b>Easy (5 points)</b>, <b>Medium (10 points)</b> or <b>Hard (15 points)</b>, or the host hits <b>🎲 Shuffle</b>. Say Team Jalebi picks <b>Easy number 7</b>:</p>
+          <div class="mini-board" aria-hidden="true">
+            <div class="mini-tile">1</div><div class="mini-tile">2</div><div class="mini-tile">3</div>
+            <div class="mini-tile">4</div><div class="mini-tile">5</div><div class="mini-tile">6</div>
+            <div class="mini-tile pick">7</div><div class="mini-tile">8</div><div class="mini-tile">9</div>
+            <div class="mini-tile">10</div><div class="mini-tile">11</div><div class="mini-tile">12</div>
+          </div>
+        </div>
+        <div class="sample-step" data-step="2">
+          <h3><span class="step-no">2 of 6</span>The lines appear, in English, with a 30 second timer</h3>
+          <p>The song opens on the big screen: <b>3 famous lines, translated into plain English</b>, and the <b>30 second countdown</b> starts. The host reads the lines out loud:</p>
+          <div class="mini-lines" aria-hidden="true">
+            <span>“ Live every moment here to the fullest</span>
+            <span>This is the time we have, who knows if it will be here tomorrow</span>
+            <span>Whether there is a tomorrow, or not ”</span>
+          </div>
+          <p>No song name, no movie name, just the lines. The trick is to hear how they sound in the <b>original language</b>.</p>
+        </div>
+        <div class="sample-step" data-step="3">
+          <h3><span class="step-no">3 of 6</span>One hint only, and it halves the points</h3>
+          <p>Team Jalebi hums the lines back, talks it over, and shouts their guess. Stuck? The host can open the song's <b>one hint</b>, which reveals the <b>movie and year</b>. Using it <b>halves that song's points</b>, rounded up: an Easy song drops from 5 to <b>3 points</b>, Medium from 10 to <b>5</b>, Hard from 15 to <b>8</b>. The reduced value applies to whichever team ends up answering the song.</p>
+          <p>When the team has guessed, right or wrong, the host taps <b>✅ Correct!</b>, <b>😬 Missed</b>, or <b>🎉 Reveal the song</b>.</p>
+        </div>
+        <div class="sample-step" data-step="4">
+          <h3><span class="step-no">4 of 6</span>The answer is revealed, and the song plays from the clue line</h3>
+          <div class="mini-answer" aria-hidden="true">
+            <p class="song">🎵 Kal Ho Naa Ho</p>
+            <p class="movie">from Kal Ho Naa Ho · 2003</p>
+            <p class="lyric">“Har pal yahaan jee bhar jiyo, jo hai samaan, kal ho naa ho…”</p>
+          </div>
+          <p>The song, its movie and the original line appear. Hit <b>▶ Play</b> and the video starts <b>at the clue line</b>, not from the beginning, and stops on its own after 1 minute.</p>
+        </div>
+        <div class="sample-step" data-step="5">
+          <h3><span class="step-no">5 of 6</span>Points, or a steal for the next team</h3>
+          <p>One of two things happens:</p>
+          <div class="outcome-row">
+            <div class="outcome">✅ <b>Team Jalebi guessed it</b>: they get the points for that section (5, 10 or 15, or the halved value if the hint was used). Done!</div>
+            <div class="outcome steal">🚨 <b>Team Jalebi missed, or the 30 seconds ran out</b>: the same song passes to the <b>next team</b> with a fresh 30 seconds. They can <b>steal it for half points</b> (Easy 3, Medium 5, Hard 8). If every team misses or times out, the song is revealed with no points.</div>
+          </div>
+        </div>
+        <div class="sample-step" data-step="6">
+          <h3><span class="step-no">6 of 6</span>The number disappears, the turn passes</h3>
+          <p>Either way, the picked number <b>disappears from the board completely</b>. It cannot be picked again, and the turn <b>automatically passes to the next team</b> in order:</p>
+          <div class="mini-board" aria-hidden="true">
+            <div class="mini-tile">1</div><div class="mini-tile">2</div><div class="mini-tile">3</div>
+            <div class="mini-tile">4</div><div class="mini-tile">5</div><div class="mini-tile">6</div>
+            <div class="mini-tile gone">7</div><div class="mini-tile">8</div><div class="mini-tile">9</div>
+            <div class="mini-tile">10</div><div class="mini-tile">11</div><div class="mini-tile">12</div>
+          </div>
+          <div class="mini-turn"><span class="turn-chip">🎯 Next turn: Team Mohanthal</span></div>
+          <p>That is one full round! Keep going until all 30 numbers are gone. The team with the most points wins the dhamaka. 🏆</p>
+        </div>
+        <div class="sample-nav">
+          <button id="sampleBackBtn" type="button">← Back</button>
+          <div class="sample-dots" id="sampleDots" aria-hidden="true"></div>
+          <span class="sample-count" id="sampleCount"></span>
+          <button id="sampleNextBtn" class="gold" type="button">Next →</button>
+        </div>
+      </div>
+    </div>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+      "use strict";
+      /* DATA: lines are 3 consecutive key lines translated into natural English.
+         diff sets the points. start is the clue line start time in seconds in the
+         video; 0 means play from the beginning (used when a start time could not
+         be verified). vid is the YouTube video ID. */
+      var SONGS = [
+        { diff: "easy", lines: ["Hey, that girl keeps winking at me", "She winks and winks, that girl winks at me", "She whistles and gestures, she is calling me over"], title: "Aankh Marey", movie: "Simmba", year: 2018, lyric: "“O ladki aankh marey, aankh marey…”", words: "Aankh (eye) · marey (winks)", vid: "_KhQT-LGb-4", start: 0 },
+        { diff: "easy", lines: ["Come, walk in the shade with me", "Walk in the shade, walk in the shade, come walk with me", "Whoever has the shade of love over his head will find heaven beneath his feet"], title: "Chaiyya Chaiyya", movie: "Dil Se", year: 1998, lyric: "“Chal chaiyya chaiyya chaiyya chaiyya…”", words: "Chal (walk) · chaiyya (in the shade)", vid: "aoS4Alr4DLk", start: 0 },
+        { diff: "easy", lines: ["Drop by drop, the water rains down", "That water has set everything on fire", "When my heart caught fire, it remembered only you"], title: "Tip Tip Barsa Paani", movie: "Mohra", year: 1994, lyric: "“Tip tip barsa paani, paani ne aag lagayi…”", words: "Tip tip (drop by drop) · barsa (rained) · paani (water)", vid: "BtlnpBb4O8E", start: 0 },
+        { diff: "easy", lines: ["Fly away, pigeon, fly away!", "Take the first letter of my first love to my beloved", "Fly away, pigeon, deliver my love letter for me"], title: "Kabootar Ja Ja Ja", movie: "Maine Pyar Kiya", year: 1989, lyric: "“Kabootar ja ja ja… pehle pyaar ki pehli chitthi saajan ko de aa…”", words: "Kabootar (pigeon) · ja ja ja (go, go, go). The pigeon is the postman", vid: "a1tVvBxs4rk", start: 0 },
+        { diff: "easy", lines: ["Let there be an auspicious beginning", "The auspicious hour has arrived", "On the threshold of dreams, my heart woke up with joy"], title: "Shubhaarambh", movie: "Kai Po Che!", year: 2013, lyric: "“Shubhaarambh… ho shubhaarambh…”", words: "Shubh (auspicious) · aarambh (the beginning)", vid: "Gx_Rqsq1DIw", start: 0 },
+        { diff: "easy", lines: ["It is you, you, and only you", "Now it is only you, my life is only you", "My peace and my pain, my whole love is only you"], title: "Tum Hi Ho", movie: "Aashiqui 2", year: 2013, lyric: "“Hum tere bin ab reh nahi sakte, tere bina kya wajood mera… tum hi ho…”", words: "Tum (you) · hi (only) · ho (are)", vid: "Umqb9KENgmk", start: 0 },
+        { diff: "easy", lines: ["Oh, that kohl, those black, black eyes of yours", "Oh, that kohl, oh that kohl in your black, black eyes", "Those eyes have stolen the peace of my heart"], title: "Kajra Re", movie: "Bunty Aur Babli", year: 2005, lyric: "“Kajra re kajra re, tere kaale kaale naina…”", words: "Kajra (kohl) · re (oh!) · kaale kaale (black black) · naina (eyes)", vid: "4dsFQFCvVGU", start: 0 },
+        { diff: "easy", lines: ["Keep your henna applied and ready", "Keep the bridal carriage decorated and ready", "Your beloved will come to take you away, fair one"], title: "Mehndi Laga Ke Rakhna", movie: "Dilwale Dulhania Le Jayenge", year: 1995, lyric: "“Mehndi laga ke rakhna, doli saja ke rakhna, lene tujhe o gori aayenge tere sajna…”", words: "Mehndi (henna) · laga ke rakhna (keep applied) · doli (bridal carriage) · saja ke rakhna (keep decorated)", vid: "-bNwqXvMuB8", start: 0 },
+        { diff: "easy", lines: ["Your love is the colour of saffron, my beloved", "If I touch it, I take on its colour", "My whole day passes thinking only of you"], title: "Kesariya", movie: "Brahmastra", year: 2022, lyric: "“Kesariya tera ishq hai piya, rang jaaun jo main haath lagaun…”", words: "Kesariya (saffron coloured) · ishq (love) · piya (beloved) · rang jaaun (I take on the colour)", vid: "BddP6PYo2gs", start: 0 },
+        { diff: "easy", lines: ["They say that in this world, God made someone for everyone", "a person for every single person", "and meeting you is a sign from God"], title: "Raabta", movie: "Agent Vinod", year: 2012, lyric: "“Kehte hain khuda ne is jahaan mein sabhi ke liye, kisi na kisi ko hai banaya har kisi ke liye…”", words: "Raabta (a connection) · kehte hain khuda (they say God) · banaya (made) · har kisi ke liye (for everyone)", vid: "zlt38OOqwDc", start: 0 },
+        { diff: "medium", lines: ["An innocent face, mischief in her eyes", "Standing far away, she blushes shyly", "Now and then she shows a glimpse, then hides away"], title: "Bholi Si Surat", movie: "Dil To Pagal Hai", year: 1997, lyric: "“Bholi si surat, aankhon mein masti…”", words: "Bholi si surat (an innocent face) · aankhon mein masti (mischief in the eyes)", vid: "kOvXnRCo1xo", start: 0 },
+        { diff: "medium", lines: ["Drummer, let your drum beat!", "Beat it, beat it, boom, boom, let the drum thunder!", "Oh drummer, your beating drum calls us all to dance"], title: "Dholi Taro Dhol Baje", movie: "Hum Dil De Chuke Sanam", year: 1999, lyric: "“Dholi taro dhol baaje…”", words: "Dholi (the drummer) · taro (your) · baaje (beats)", vid: "Tfjoyp0g5HA", start: 0 },
+        { diff: "medium", lines: ["A first high, a first sweet daze", "This is a new love, a new waiting", "Tell me, what should I do with this restless heart?"], title: "Pehla Nasha", movie: "Jo Jeeta Wohi Sikandar", year: 1992, lyric: "“Pehla nasha, pehla khumar, naya pyaar hai, naya intezaar…”", words: "Pehla (first) · nasha (intoxication) · khumar (the sweet daze after)", vid: "iSUK1QoK9-E", start: 0 },
+        { diff: "medium", lines: ["Whether my eyes are open or shut, I still see her face", "How can I explain it, my friend?", "How does this thing called love happen?"], title: "Aankhein Khuli", movie: "Mohabbatein", year: 2000, lyric: "“Aankhein khuli ho ya ho bandh, deedar unka hota hai…”", words: "Aankhein (eyes) · khuli (open) · bandh (shut) · deedar (the sight of her)", vid: "eM8Mjuq4MwQ", start: 0 },
+        { diff: "medium", lines: ["My dancing bells have broken", "My dancing bells have broken from dancing so much", "Keep dancing, keep swaying, even if the bells break"], title: "Ghungroo", movie: "War", year: 2019, lyric: "“Ghungroo toot gaye…”", words: "Ghungroo (anklet bells) · toot gaye (have broken)", vid: "qFkNATtc3mc", start: 0 },
+        { diff: "medium", lines: ["This ill-mannered heart just won't listen", "This ill-mannered heart just won't listen, won't listen at all", "Whatever I say, this stubborn heart does its own thing"], title: "Badtameez Dil", movie: "Yeh Jawaani Hai Deewani", year: 2013, lyric: "“Badtameez dil, badtameez dil, badtameez dil maane na…”", words: "Badtameez (ill-mannered) · dil (heart) · maane na (just won't listen)", vid: "II2EO3Nw4m0", start: 0 },
+        { diff: "medium", lines: ["Let's sit together and talk heart to heart", "Sitting side by side, we will share heart-to-heart talks", "Looking eye to eye as we talk from the heart"], title: "Dil Diyan Gallan", movie: "Tiger Zinda Hai", year: 2017, lyric: "“Dil diyan gallan, karaange naal naal beh ke…”", words: "Dil (heart) · diyan (of the) · gallan (talks). Punjabi for heart-to-heart talks", vid: "SAcpESN_Fk4", start: 0 },
+        { diff: "medium", lines: ["My scarf keeps flying and flying in the air", "Every pair of eyes keeps turning to look", "Something strange stirs inside my chest"], title: "Odhani", movie: "Made in China", year: 2019, lyric: "“Odhani ude ude re, akhiyaan mude mude re, mere seene mein kuch kuch thaye…”", words: "Odhani (scarf) · ude (flies) · akhiyaan (eyes) · mude (turn)", vid: "C7u6rtswjCU", start: 0 },
+        { diff: "medium", lines: ["Let the eyes meet, let the lightning strike", "I'll tie on my dancing bells, I'll wear my anklets", "I'll dance swaying, I'll dance spinning"], title: "Dola Re Dola", movie: "Devdas", year: 2002, lyric: "“Dola re dola re dola re dola…”", words: "Dola (swayed) · re (oh). Pure spinning", vid: "iZ5UItyEpGE", start: 0 },
+        { diff: "medium", lines: ["I keep talking only about you", "your meetings often come to mind", "winning your love is my madness"], title: "Jhalak Dikhla Ja", movie: "Aksar", year: 2006, lyric: "“Jhalak dikhla ja (show me a glimpse), ek baar aaja aaja aaja…”", words: "Jhalak (a glimpse) · dikhla ja (show me). The hook line is: show me a glimpse, just come once", vid: "vnlk8V-q0oU", start: 0 },
+        { diff: "hard", lines: ["O my star, oh my charming star", "Oh my colourful star, oh my shining star", "Your anklets chime and the whole ground lights up"], title: "Chogada", movie: "Loveyatri", year: 2018, lyric: "“Chogada tara, chabila tara…”", words: "Chogada tara (star of mine) · chabila tara (charming one of mine)", vid: "BzcKINXf-rs", start: 0 },
+        { diff: "hard", lines: ["Steady yourself, my heart, just a little", "You are setting out to fall in love again", "Sit here a moment and understand where you have come"], title: "Dil Sambhal Ja Zara", movie: "Murder 2", year: 2011, lyric: "“Dil sambhal ja zara, phir mohabbat karne chala hai tu.”", words: "Dil (heart) · sambhal (steady yourself) · ja (go on) · zara (just a little)", vid: "NRHIBKNNzAk", start: 0 },
+        { diff: "hard", lines: ["That waist of hers twists and sways", "Her waist twists, oh, her waist sways and twists", "When she dances, that waist twists and turns"], title: "Kamariya", movie: "Mitron", year: 2018, lyric: "“Kamariya… kamariya lachke re…”", words: "Kamariya (the waist) · lachke (twists) · re (oh!)", vid: "i0_m90T04uw", start: 0 },
+        { diff: "hard", lines: ["Sweet talks, nothing but sweet talks", "Sweet talks, only sweet talks between us", "All night long, nothing but sweet, sweet talks"], title: "Gallan Goodiyaan", movie: "Dil Dhadakne Do", year: 2015, lyric: "“Gallan goodiyaan… gallan goodiyaan…”", words: "Gallan (talks) · goodiyaan (sweet ones). The scene behind it: a wedding celebration where the whole family stops behaving properly and dances like carefree dolls, no inhibitions and no formalities, just joy", vid: "jCEdTq3j-0U", start: 0 },
+        { diff: "hard", lines: ["Round and round and round it goes", "Round and round, the red one spins round and round", "Spin it round, spin it round, round and round it goes"], title: "Sanedo", movie: "Made in China", year: 2019, lyric: "“Sanedo sanedo sanedo… laal sanedo…”", words: "Sanedo: the folk cry for spinning round and round in garba", vid: "KwUIzf3eM9I", start: 0 },
+        { diff: "hard", lines: ["I have laid my eyelashes across the courtyard path", "The queen herself is arriving now", "Please come and join the spinning dance with us"], title: "Ghoomar", movie: "Padmaavat", year: 2018, lyric: "“Ghoomar ramwane aap padharo sa, aavo ji aavo ji ghoomardi khelba ne…”", words: "The spinning folk dance of Rajasthan · ramwane (to play and dance) · padharo (please come)", vid: "CU1tFtk_NFY", start: 0 },
+        { diff: "hard", lines: ["If the chili burned you, what am I to do?", "If the chili burned you, what can I do?", "If the spice made your eyes water, what am I to do?"], title: "Tujhe Mirchi Lagi Toh", movie: "Coolie No. 1", year: 2020, lyric: "“Tujhe mirchi lagi toh main kya karoon…”", words: "Tujhe (you) · mirchi (chili) · lagi (burned) · toh (so) · main kya karoon (what can I do)", vid: "EQlYzDdOLxI", start: 0 },
+        { diff: "hard", lines: ["Someone who already aches for you", "why make them ache even more, you cruel one?", "Someone already lost in your love"], title: "Zaalima", movie: "Raees", year: 2017, lyric: "“Jo teri khatir tadpe pehle se hi, kya use tadpana, o zaalima…”", words: "Zaalima (cruel one) · tadpe (aches and yearns) · khatir (for the sake of)", vid: "lpdRqn6xwiM", start: 0 },
+        { diff: "hard", lines: ["Like a fierce bull leaping in the dust of the fields", "like the lead dancer at the village goddess festival", "like twirling sticks while wearing wooden sandals"], title: "Naacho Naacho", movie: "RRR", year: 2022, lyric: "“Naatu naatu… (original version)”", words: "The card uses the original version lines, and the video below is the original version so the audio matches the clue", vid: "OsU0CGZoV8E", start: 0 },
+        { diff: "hard", lines: ["Hold me close, for this beautiful night may never come again", "perhaps in this lifetime, we may never meet again", "these moments have reached us today only by fate"], title: "Lag Ja Gale", movie: "Woh Kaun Thi", year: 1964, lyric: "“Lag ja gale ke phir ye haseen raat ho na ho…”", words: "Lag ja gale (hold me close) · haseen raat (beautiful night) · ho na ho (may or may not happen)", vid: "TFr6G5zveS8", start: 0 }
+      ];
+      var DIFFS = {
+        easy: { label: "Easy", pts: 5 },
+        medium: { label: "Medium", pts: 10 },
+        hard: { label: "Hard", pts: 15 }
+      };
+      var TEAMS = [
+        { name: "Team Kaju Katli", color: "#ff5d7e" },
+        { name: "Team Jalebi", color: "#ff8c42" },
+        { name: "Team Mohanthal", color: "#ffd23e" },
+        { name: "Team Barfi", color: "#7fd08c" },
+        { name: "Team Ladoo", color: "#5db3ff" }
+      ];
+      var CLIP_SECONDS = 60;
+      var GUESS_SECONDS = 30;
+      var scores = [0, 0, 0, 0, 0];
+      var played = {};
+      var awardedTo = {};
+      var current = -1;
+      var pickerIdx = 0;
+      var attemptIdx = 0;
+      var tried = {};
+      var stealMode = false;
+      var hintUsed = false;
+      var revealed = false;
+      var teamCount = 5;
+      var turnIdx = 0;
+      var guessTimerId = null, guessLeft = GUESS_SECONDS, guessRunning = false;
+      function $(id) { return document.getElementById(id); }
+      function fullPoints() { return current < 0 ? 0 : DIFFS[SONGS[current].diff].pts; }
+      function halfPoints() { return Math.ceil(fullPoints() / 2); }
+      function pointsNow() {
+        if (current < 0) return 0;
+        if (stealMode || hintUsed) return halfPoints();
+        return fullPoints();
+      }
+      function unplayedList() {
+        var out = [];
+        for (var i = 0; i < SONGS.length; i++) if (!played[i]) out.push(i);
+        return out;
+      }
+      function buildScoreboard() {
+        var sb = $("scoreboard");
+        sb.innerHTML = "";
+        TEAMS.forEach(function (t, i) {
+          if (i >= teamCount) return;
+          var card = document.createElement("div");
+          card.className = "team";
+          card.id = "team-" + i;
+          card.style.setProperty("--team", t.color);
+          var input = document.createElement("input");
+          input.type = "text";
+          input.value = t.name;
+          input.setAttribute("aria-label", "Team name");
+          input.addEventListener("input", function () {
+            TEAMS[i].name = input.value || ("Team " + (i + 1));
+            renderAwardRow();
+            if (typeof jRenderBoard === "function") jRenderBoard();
+          });
+          var score = document.createElement("div");
+          score.className = "score";
+          score.id = "score-" + i;
+          score.textContent = "0";
+          var adj = document.createElement("div");
+          adj.className = "adj";
+          var minus = document.createElement("button");
+          minus.type = "button"; minus.textContent = "−";
+          minus.setAttribute("aria-label", "Minus one point");
+          minus.addEventListener("click", function () { scores[i]--; renderScores(); });
+          var plus = document.createElement("button");
+          plus.type = "button"; plus.textContent = "+";
+          plus.setAttribute("aria-label", "Plus one point");
+          plus.addEventListener("click", function () { scores[i]++; renderScores(); });
+          var tag = document.createElement("div");
+          tag.className = "turn-tag";
+          tag.textContent = "🎯 ON TURN";
+          adj.appendChild(minus); adj.appendChild(plus);
+          card.appendChild(input); card.appendChild(tag); card.appendChild(score); card.appendChild(adj);
+          sb.appendChild(card);
+        });
+      }
+      function renderScores() {
+        for (var i = 0; i < TEAMS.length; i++) {
+          var el = $("score-" + i);
+          if (el) el.textContent = scores[i];
+        }
+      }
+      function setTeamCount(n) {
+        teamCount = n;
+        if (turnIdx >= teamCount) turnIdx = 0;
+        $("teams4Btn").classList.toggle("active", n === 4);
+        $("teams5Btn").classList.toggle("active", n === 5);
+        $("scoreboard").classList.toggle("t4", n === 4);
+        buildScoreboard();
+        renderScores();
+        renderTurn();
+        if (typeof jRenderBoard === "function") jRenderBoard();
+      }
+      function renderTurn() {
+        var ti = (typeof activeTab !== "undefined" && activeTab === "jumble" && typeof jTurn !== "undefined") ? jTurn : turnIdx;
+        for (var i = 0; i < TEAMS.length; i++) {
+          var card = $("team-" + i);
+          if (card) card.classList.toggle("turn", i === ti && i < teamCount);
+        }
+      }
+      function renderTurnChip() {
+        var chip = $("turnChip");
+        if (!chip) return;
+        if (current < 0) { chip.hidden = true; return; }
+        chip.hidden = false;
+        if (revealed) {
+          chip.classList.remove("steal");
+          chip.textContent = "✅ Round done. Next turn: " + TEAMS[turnIdx].name;
+          return;
+        }
+        chip.classList.toggle("steal", stealMode);
+        chip.textContent = stealMode
+          ? "🚨 Steal chance: " + TEAMS[attemptIdx].name + " is guessing for " + pointsNow() + " pts"
+          : "🎯 " + TEAMS[attemptIdx].name + "'s turn";
+      }
+      function buildBoard() { renderBoard(); }
+      function renderBoard() {
+        var wrap = $("boardSections");
+        wrap.innerHTML = "";
+        ["easy", "medium", "hard"].forEach(function (d) {
+          var sec = document.createElement("div");
+          sec.className = "diff-section diff-" + d;
+          var head = document.createElement("div");
+          head.className = "diff-head";
+          var h = document.createElement("h3");
+          h.textContent = DIFFS[d].label;
+          var p = document.createElement("span");
+          p.className = "pts";
+          p.textContent = DIFFS[d].pts + " points";
+          head.appendChild(h); head.appendChild(p);
+          sec.appendChild(head);
+          var remaining = SONGS.map(function (s, i) { return { s: s, i: i }; }).filter(function (x) { return x.s.diff === d && !played[x.i]; });
+          if (remaining.length === 0) {
+            var done = document.createElement("p");
+            done.className = "section-done";
+            done.textContent = "All " + DIFFS[d].label + " songs played.";
+            sec.appendChild(done);
+          } else {
+            var grid = document.createElement("div");
+            grid.className = "grid";
+            var num = 0;
+            SONGS.forEach(function (s, i) {
+              if (s.diff !== d) return;
+              num++;
+              if (played[i]) return;
+              var b = document.createElement("button");
+              b.type = "button";
+              b.className = "tile" + (i === current ? " current" : "");
+              b.id = "tile-" + i;
+              b.textContent = num;
+              b.setAttribute("aria-label", DIFFS[d].label + " song " + num);
+              b.addEventListener("click", function () { openPuzzle(i, false); });
+              grid.appendChild(b);
+            });
+            sec.appendChild(grid);
+          }
+          wrap.appendChild(sec);
+        });
+        var left = unplayedList().length;
+        $("leftCount").textContent = left === 0 ? "All 30 played. Dhamaka complete! 🎉" : left + " of 30 still to play";
+      }
+      function guessUpdateUI() {
+        var num = $("guessTimeNum");
+        if (!num) return;
+        num.textContent = Math.ceil(guessLeft);
+        num.classList.toggle("low", guessLeft <= 5.05 && guessRunning);
+        $("guessFill").style.width = Math.max(0, (guessLeft / GUESS_SECONDS) * 100) + "%";
+      }
+      function guessStopTimer() {
+        if (guessTimerId) { clearInterval(guessTimerId); guessTimerId = null; }
+        guessRunning = false;
+      }
+      function guessStartTimer() {
+        guessStopTimer();
+        guessLeft = GUESS_SECONDS;
+        guessRunning = true;
+        guessUpdateUI();
+        guessTimerId = setInterval(function () {
+          if (!guessRunning || revealed) return;
+          guessLeft -= 0.1;
+          if (guessLeft <= 0) {
+            guessLeft = 0;
+            guessUpdateUI();
+            guessStopTimer();
+            passTurn(true);
+            return;
+          }
+          guessUpdateUI();
+        }, 100);
+      }
+      function openPuzzle(i, viaShuffle) {
+        stopPlayback();
+        guessStopTimer();
+        current = i;
+        pickerIdx = turnIdx;
+        attemptIdx = turnIdx;
+        tried = {};
+        stealMode = false;
+        hintUsed = false;
+        revealed = false;
+        $("stageIdle").hidden = true;
+        $("stageGame").hidden = false;
+        var numInDiff = 0;
+        for (var k = 0; k <= i; k++) if (SONGS[k].diff === SONGS[i].diff) numInDiff++;
+        $("stageTitle").textContent = DIFFS[SONGS[i].diff].label + " #" + numInDiff + (viaShuffle ? " · 🎲 Shuffle pick!" : "");
+        var linesEl = $("stageLine");
+        linesEl.innerHTML = "";
+        SONGS[i].lines.forEach(function (ln) {
+          var span = document.createElement("span");
+          span.className = "song-line";
+          span.textContent = ln;
+          linesEl.appendChild(span);
+        });
+        $("keylineLabel").textContent = SONGS[i].lines.length + " lines, in English · " + DIFFS[SONGS[i].diff].label;
+        $("stageNote").textContent = "It is " + TEAMS[attemptIdx].name + "'s turn. 30 seconds on the clock!";
+        $("hintBox").classList.remove("show");
+        $("hintText").textContent = "";
+        $("hintBtn").disabled = false;
+        $("hintBtn").textContent = "💡 Use the one hint (points halved to " + halfPoints() + ")";
+        $("preRevealActions").style.display = "flex";
+        $("guessTimer").style.display = "block";
+        $("answer").classList.remove("show");
+        $("playerWrap").classList.remove("show");
+        $("countdown").classList.remove("show");
+        $("stopBtn").hidden = true;
+        $("playBtn").hidden = false;
+        updateWorth();
+        renderBoard();
+        renderTurnChip();
+        guessStartTimer();
+      }
+      function updateWorth() {
+        $("worthBadge").textContent = revealed ? "Revealed!" : "Worth " + pointsNow() + " pts";
+        renderTurnChip();
+      }
+      function useHint() {
+        if (revealed || hintUsed || current < 0) return;
+        var s = SONGS[current];
+        hintUsed = true;
+        $("hintText").textContent = s.movie + (s.year ? " (" + s.year + ")" : "");
+        $("hintBox").classList.add("show");
+        $("hintBtn").disabled = true;
+        $("hintBtn").textContent = "💡 Hint used. Points are now " + pointsNow();
+        updateWorth();
+      }
+      function passTurn(fromTimeout) {
+        if (current < 0 || revealed) return;
+        tried[attemptIdx] = true;
+        var next = -1;
+        for (var k = 1; k < teamCount; k++) {
+          var cand = (pickerIdx + k) % teamCount;
+          if (!tried[cand]) { next = cand; break; }
+        }
+        if (next < 0) {
+          revealSong(-2);
+          return;
+        }
+        var prevName = TEAMS[attemptIdx].name;
+        attemptIdx = next;
+        stealMode = true;
+        $("stageNote").textContent = (fromTimeout ? "⏰ Time is up for " + prevName + "! " : prevName + " missed it! ") +
+          "Steal chance: " + TEAMS[attemptIdx].name + " guesses for " + pointsNow() + " pts, with a fresh 30 seconds.";
+        updateWorth();
+        guessStartTimer();
+      }
+      function correctGuess() {
+        if (current < 0 || revealed) return;
+        revealSong(attemptIdx);
+      }
+      function revealSong(winner) {
+        if (current < 0) return;
+        guessStopTimer();
+        revealed = true;
+        var s = SONGS[current];
+        if (winner >= 0 && awardedTo[current] === undefined) {
+          scores[winner] += pointsNow();
+          awardedTo[current] = winner;
+        } else if (winner === -2 && awardedTo[current] === undefined) {
+          awardedTo[current] = -1;
+        }
+        if (awardedTo[current] !== undefined) {
+          played[current] = true;
+          turnIdx = (pickerIdx + 1) % teamCount;
+        }
+        $("ansSong").textContent = "🎵 " + s.title;
+        $("ansMovie").textContent = "from " + s.movie + (s.year ? " · " + s.year : "") + " · " + DIFFS[s.diff].label + " · " + DIFFS[s.diff].pts + " points";
+        $("ansLyric").textContent = s.lyric;
+        $("ansWords").innerHTML = "";
+        var b = document.createElement("b");
+        b.textContent = "The original, word for word: ";
+        $("ansWords").appendChild(b);
+        $("ansWords").appendChild(document.createTextNode(s.words));
+        $("answer").classList.add("show");
+        $("preRevealActions").style.display = "none";
+        $("guessTimer").style.display = "none";
+        $("playBtn").textContent = s.start > 0 ? "▶ Play from the clue line (1 minute)" : "▶ Play 1 minute";
+        $("ytNote").innerHTML = "Plays the official video right here" + (s.start > 0 ? ", starting at the clue line," : "") + " and stops on its own after 1 minute. If a video refuses to play in the page, " +
+          '<a href="https://www.youtube.com/watch?v=' + s.vid + '" target="_blank" rel="noopener">open it on YouTube</a>.';
+        renderScores();
+        updateWorth();
+        renderBoard();
+        renderAwardRow();
+        renderTurn();
+      }
+      function revealManual() {
+        if (current < 0 || revealed) return;
+        revealSong(-1);
+      }
+      function renderAwardRow() {
+        renderTurnChip();
+        var aw = $("award");
+        var row = $("awardRow");
+        if (current < 0 || !revealed) { aw.classList.remove("show"); return; }
+        aw.classList.add("show");
+        row.innerHTML = "";
+        if (awardedTo[current] !== undefined) {
+          var note = document.createElement("span");
+          note.className = "done-note";
+          note.textContent = awardedTo[current] === -1
+            ? "No points this round. On to the next number! ➡️"
+            : "🏆 Points went to " + TEAMS[awardedTo[current]].name + "!";
+          row.appendChild(note);
+          $("awardPrompt").textContent = "Round complete";
+          return;
+        }
+        $("awardPrompt").textContent = "Who answered it? Tap the team, or nobody.";
+        TEAMS.forEach(function (t, i) {
+          if (i >= teamCount) return;
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.textContent = t.name + " +" + pointsNow();
+          btn.style.borderColor = t.color;
+          btn.addEventListener("click", function () {
+            scores[i] += pointsNow();
+            awardedTo[current] = i;
+            played[current] = true;
+            turnIdx = (pickerIdx + 1) % teamCount;
+            renderScores(); renderBoard(); renderAwardRow(); renderTurn(); updateWorth();
+          });
+          row.appendChild(btn);
+        });
+        var noneB = document.createElement("button");
+        noneB.type = "button";
+        noneB.textContent = "Nobody got it 😅";
+        noneB.addEventListener("click", function () {
+          awardedTo[current] = -1;
+          played[current] = true;
+          turnIdx = (pickerIdx + 1) % teamCount;
+          renderBoard(); renderAwardRow(); renderTurn(); updateWorth();
+        });
+        row.appendChild(noneB);
+      }
+      var ytPlayer = null, ytReady = false, cdTimer = null, playStartedAt = 0;
+      function onYouTubeIframeAPIReady() { ytReady = true; }
+      window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+      function fmt(sec) {
+        sec = Math.max(0, Math.ceil(sec));
+        return Math.floor(sec / 60) + ":" + ("0" + (sec % 60)).slice(-2);
+      }
+      function startCountdown() {
+        stopCountdown();
+        $("countdown").classList.add("show");
+        cdTimer = setInterval(function () {
+          if (!ytPlayer || typeof ytPlayer.getCurrentTime !== "function") return;
+          var t = ytPlayer.getCurrentTime() || 0;
+          var elapsed = t - playStartedAt;
+          var left = CLIP_SECONDS - elapsed;
+          $("cdFill").style.width = Math.max(0, (left / CLIP_SECONDS) * 100) + "%";
+          $("cdTime").textContent = fmt(left) + " left of the 1 minute play 🎶";
+          if (elapsed >= CLIP_SECONDS) {
+            stopPlayback();
+            $("cdTime").textContent = "That is the minute! 🎉";
+            $("countdown").classList.add("show");
+          }
+        }, 250);
+      }
+      function stopCountdown() { if (cdTimer) { clearInterval(cdTimer); cdTimer = null; } }
+      function stopPlayback() {
+        stopCountdown();
+        if (ytPlayer && typeof ytPlayer.stopVideo === "function") {
+          try { ytPlayer.stopVideo(); } catch (e) {}
+        }
+        var sb = $("stopBtn"), pb = $("playBtn");
+        if (sb) sb.hidden = true;
+        if (pb) pb.hidden = false;
+      }
+      function playCurrent() {
+        var s = SONGS[current];
+        if (!s) return;
+        $("playerWrap").classList.add("show");
+        $("playBtn").hidden = true;
+        $("stopBtn").hidden = false;
+        playStartedAt = s.start || 0;
+        var startPlayback = function () {
+          if (ytPlayer) {
+            ytPlayer.loadVideoById({ videoId: s.vid, startSeconds: playStartedAt });
+          } else {
+            ytPlayer = new YT.Player("ytPlayer", {
+              videoId: s.vid,
+              playerVars: { autoplay: 1, rel: 0, playsinline: 1, start: playStartedAt },
+              events: {
+                onStateChange: function (e) {
+                  if (e.data === YT.PlayerState.PLAYING) startCountdown();
+                  if (e.data === YT.PlayerState.ENDED || e.data === YT.PlayerState.PAUSED) stopCountdown();
+                }
+              }
+            });
+            setTimeout(function () {
+              if (ytPlayer && typeof ytPlayer.getPlayerState === "function" &&
+                  ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) startCountdown();
+            }, 1200);
+          }
+        };
+        if (ytReady && window.YT && YT.Player) {
+          startPlayback();
+        } else {
+          var tries = 0;
+          var wait = setInterval(function () {
+            tries++;
+            if (window.YT && YT.Player) { clearInterval(wait); ytReady = true; startPlayback(); }
+            if (tries > 40) { clearInterval(wait); $("ytNote").textContent = "The YouTube player did not load. Use the YouTube link above instead."; }
+          }, 250);
+        }
+      }
+      var shuffling = false;
+      function shufflePick() {
+        if (shuffling) return;
+        var pool = unplayedList().filter(function (i) { return i !== current; });
+        if (pool.length === 0) return;
+        var target = pool[Math.floor(Math.random() * pool.length)];
+        shuffling = true;
+        stopPlayback();
+        guessStopTimer();
+        var flashes = 0;
+        var iv = setInterval(function () {
+          var tiles = document.querySelectorAll(".tile.flash");
+          for (var k = 0; k < tiles.length; k++) tiles[k].classList.remove("flash");
+          var avail = document.querySelectorAll(".tile");
+          if (avail.length) avail[Math.floor(Math.random() * avail.length)].classList.add("flash");
+          flashes++;
+          if (flashes >= 14) {
+            clearInterval(iv);
+            var all = document.querySelectorAll(".tile.flash");
+            for (var j = 0; j < all.length; j++) all[j].classList.remove("flash");
+            shuffling = false;
+            openPuzzle(target, true);
+          }
+        }, 80);
+      }
+      var sampleStep = 1, SAMPLE_STEPS = 6;
+      function showSampleStep(n) {
+        sampleStep = Math.max(1, Math.min(SAMPLE_STEPS, n));
+        var steps = document.querySelectorAll(".sample-step[data-step]");
+        for (var i = 0; i < steps.length; i++) {
+          steps[i].classList.toggle("show", Number(steps[i].getAttribute("data-step")) === sampleStep);
+        }
+        var dots = $("sampleDots");
+        dots.innerHTML = "";
+        for (var d = 1; d <= SAMPLE_STEPS; d++) {
+          var dot = document.createElement("i");
+          if (d === sampleStep) dot.className = "on";
+          dots.appendChild(dot);
+        }
+        $("sampleCount").textContent = "Step " + sampleStep + " of " + SAMPLE_STEPS;
+        $("sampleBackBtn").disabled = sampleStep === 1;
+        $("sampleNextBtn").textContent = sampleStep === SAMPLE_STEPS ? "Start the real game →" : "Next →";
+      }
+      function openSample() { showSampleStep(1); $("sampleBackdrop").classList.add("open"); }
+      function closeSample() { $("sampleBackdrop").classList.remove("open"); }
+      function setFontSize(mode) {
+        var pct = mode === "s" ? "87.5%" : mode === "l" ? "125%" : "100%";
+        document.documentElement.style.fontSize = pct;
+        $("fontSBtn").classList.toggle("active", mode === "s");
+        $("fontMBtn").classList.toggle("active", mode === "m");
+        $("fontLBtn").classList.toggle("active", mode === "l");
+      }
+      function toggleFullscreen() {
+        try {
+          if (document.fullscreenElement) {
+            var p0 = document.exitFullscreen();
+            if (p0 && p0.catch) p0.catch(function () {});
+          } else if (document.documentElement.requestFullscreen) {
+            var p1 = document.documentElement.requestFullscreen();
+            if (p1 && p1.catch) p1.catch(function () {});
+          } else if (document.documentElement.webkitRequestFullscreen) {
+            document.documentElement.webkitRequestFullscreen();
+          }
+        } catch (e) {}
+      }
+      document.addEventListener("DOMContentLoaded", function () {
+        buildScoreboard();
+        buildBoard();
+        renderScores();
+        renderTurn();
+        $("teams4Btn").addEventListener("click", function () { setTeamCount(4); });
+        $("teams5Btn").addEventListener("click", function () { setTeamCount(5); });
+        $("fontSBtn").addEventListener("click", function () { setFontSize("s"); });
+        $("fontMBtn").addEventListener("click", function () { setFontSize("m"); });
+        $("fontLBtn").addEventListener("click", function () { setFontSize("l"); });
+        $("hintBtn").addEventListener("click", useHint);
+        $("correctBtn").addEventListener("click", correctGuess);
+        $("missBtn").addEventListener("click", function () { guessStopTimer(); passTurn(false); });
+        $("revealBtn").addEventListener("click", revealManual);
+        $("playBtn").addEventListener("click", playCurrent);
+        $("stopBtn").addEventListener("click", function () {
+          stopPlayback();
+          $("countdown").classList.remove("show");
+        });
+        $("shuffleBtn").addEventListener("click", shufflePick);
+        $("resetBtn").addEventListener("click", function () {
+          stopPlayback();
+          guessStopTimer();
+          scores = [0, 0, 0, 0, 0];
+          played = {}; awardedTo = {}; current = -1; hintUsed = false; revealed = false; turnIdx = 0; stealMode = false; tried = {};
+          $("stageGame").hidden = true;
+          $("stageIdle").hidden = false;
+          renderScores(); renderBoard(); renderTurn();
+        });
+        $("sampleBtn").addEventListener("click", openSample);
+        $("sampleCloseBtn").addEventListener("click", closeSample);
+        $("sampleBackBtn").addEventListener("click", function () { showSampleStep(sampleStep - 1); });
+        $("sampleNextBtn").addEventListener("click", function () {
+          if (sampleStep >= SAMPLE_STEPS) closeSample();
+          else showSampleStep(sampleStep + 1);
+        });
+        $("sampleBackdrop").addEventListener("click", function (e) {
+          if (e.target === $("sampleBackdrop")) closeSample();
+        });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") closeSample();
+        });
+        $("fsBtn").addEventListener("click", toggleFullscreen);
+      });
+    </script>
+    <script>
+      "use strict";
+      var JWORDS = [
+        { w: "RANGOLI", clue: "Colourful floor art made with coloured powders at the entrance to welcome Lakshmi." },
+        { w: "MITHAI", clue: "Sweet treats gifted in boxes to everyone who visits." },
+        { w: "LAKSHMI", clue: "The goddess of wealth, worshipped on Diwali night alongside Ganesh." },
+        { w: "DHANTERAS", clue: "The first day of Diwali, the lucky day to buy gold, silver or new utensils." },
+        { w: "SPARKLER", clue: "A handheld firework that showers golden sparks, a fuljhadi." },
+        { w: "MARIGOLD", clue: "The orange and yellow flower strung into garlands for every doorway." },
+        { w: "CHAKRI", clue: "A ground firework that spins round and round in a circle of sparks." },
+        { w: "JALEBI", clue: "Crisp orange spirals soaked in syrup, best eaten hot." },
+        { w: "DEEPAK", clue: "Another name for the little clay oil lamp lit in rows." },
+        { w: "AYODHYA", clue: "The city that welcomed Ram home with rows of glowing lamps." },
+        { w: "GANESHA", clue: "The god worshipped alongside Lakshmi at the Diwali puja." },
+        { w: "ANNAKUT", clue: "A mountain of food offered to Krishna the day after Diwali." },
+        { w: "NAMKEEN", clue: "Savoury crunchies served beside the sweets. Chevdo is one." },
+        { w: "CAMPHOR", clue: "White crystals burned in the aarti flame, kapur." },
+        { w: "CHORAFALI", clue: "A Gujarati Diwali snack that puffs up like a balloon when fried." },
+        { w: "FATAKDA", clue: "The Gujarati word for firecrackers." },
+        { w: "KUMKUM", clue: "The red powder used to make a tilak on the forehead." },
+        { w: "RAMAYANA", clue: "The great epic whose story is the reason Diwali is celebrated." },
+        { w: "BHAIDOOJ", clue: "The last day of Diwali, celebrating brothers and sisters." },
+        { w: "DEEPAVALI", clue: "The festival's full name. It means a row of lights." },
+        { w: "SARASWATI", clue: "Goddess of learning. New account books are blessed in her name at Chopda Pujan." },
+        { w: "MOHANTHAL", clue: "A rich gram flour and ghee sweet, a Gujarati Diwali staple." },
+        { w: "AGARBATTI", clue: "Fragrant incense sticks lit during the puja." },
+        { w: "GOVARDHAN", clue: "The day after Diwali, when Krishna lifted a whole hill to shelter his people." },
+        { w: "SHRIKHAND", clue: "A saffron flavoured sweet made from thick hung curd." }
+      ];
+      var activeTab = "song";
+      var jTurn = 0;
+      var jCurrent = -1;
+      var jOwner = -1;
+      var jAttempt = -1;
+      var jWorthPts = 10;
+      var jPlayedJ = {};
+      var jTried = {};
+      var jOpen = false;
+      var jTimerId = null, jLeft = 15, jPaused = false;
+      var JTIME = 15;
+      function jOwnerOf(idx) { return Math.floor(idx / 5); }
+      function jFirstUnplayed(t) {
+        for (var k = 0; k < 5; k++) {
+          var idx = t * 5 + k;
+          if (jPlayedJ[idx] === undefined) return idx;
+        }
+        return -1;
+      }
+      function jAllDone() {
+        for (var t = 0; t < teamCount; t++) if (jFirstUnplayed(t) >= 0) return false;
+        return true;
+      }
+      function jScramble(word) {
+        var a = word.split("");
+        for (var tries = 0; tries < 25; tries++) {
+          for (var i = a.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+          }
+          if (a.join("") !== word) break;
+        }
+        return a;
+      }
+      function jRenderBoard() {
+        var board = $("jBoard");
+        if (!board) return;
+        board.innerHTML = "";
+        var left = 0;
+        TEAMS.forEach(function (t, ti) {
+          if (ti >= teamCount) return;
+          var row = document.createElement("div");
+          row.className = "j-row" + (ti === jTurn ? " turn" : "");
+          row.style.setProperty("--team", t.color);
+          var name = document.createElement("div");
+          name.className = "j-row-name";
+          var dot = document.createElement("span");
+          dot.className = "j-dot";
+          name.appendChild(dot);
+          name.appendChild(document.createTextNode(t.name));
+          var tiles = document.createElement("div");
+          tiles.className = "j-tiles";
+          for (var k = 0; k < 5; k++) {
+            (function (idx, slot) {
+              var b = document.createElement("button");
+              b.type = "button";
+              b.className = "j-tile";
+              b.textContent = slot + 1;
+              if (jPlayedJ[idx] !== undefined) b.classList.add("played");
+              else if (idx === jCurrent) b.classList.add("open-now");
+              else if (jOwnerOf(idx) === jTurn && !jOpen) b.classList.add("avail");
+              b.disabled = !(jPlayedJ[idx] === undefined && idx !== jCurrent && jOwnerOf(idx) === jTurn && !jOpen);
+              b.setAttribute("aria-label", TEAMS[jOwnerOf(idx)].name + " word " + (slot + 1));
+              b.addEventListener("click", function () { jOpenWord(idx); });
+              tiles.appendChild(b);
+            })(ti * 5 + k, k);
+            if (jPlayedJ[ti * 5 + k] === undefined) left++;
+          }
+          row.appendChild(name);
+          row.appendChild(tiles);
+          board.appendChild(row);
+        });
+        var lc = $("jLeftCount");
+        if (lc) lc.textContent = left === 0 ? "All words played! 🎉" : left + " of " + (teamCount * 5) + " words still to play";
+      }
+      function jUpdateTimerUI() {
+        var num = $("jTimeNum");
+        if (!num) return;
+        num.textContent = Math.ceil(jLeft);
+        num.classList.toggle("low", jLeft <= 5.05 && jOpen);
+        $("jFill").style.width = Math.max(0, (jLeft / JTIME) * 100) + "%";
+        $("jPauseBtn").textContent = jPaused ? "▶ Resume" : "⏸ Pause";
+      }
+      function jStartTimer() {
+        jStopTimer();
+        jLeft = JTIME;
+        jPaused = false;
+        jUpdateTimerUI();
+        jTimerId = setInterval(function () {
+          if (jPaused || !jOpen) return;
+          jLeft -= 0.1;
+          if (jLeft <= 0) {
+            jLeft = 0;
+            jUpdateTimerUI();
+            jBuzz();
+            jPass(true);
+            return;
+          }
+          jUpdateTimerUI();
+        }, 100);
+      }
+      function jStopTimer() { if (jTimerId) { clearInterval(jTimerId); jTimerId = null; } }
+      var jAudio = null;
+      function jBuzz() {
+        try {
+          if (!jAudio) jAudio = new (window.AudioContext || window.webkitAudioContext)();
+          if (jAudio.state === "suspended") jAudio.resume();
+          var t0 = jAudio.currentTime;
+          [0, 0.22].forEach(function (off) {
+            var o = jAudio.createOscillator(), g = jAudio.createGain();
+            o.type = "square";
+            o.frequency.value = 220;
+            g.gain.setValueAtTime(0.1, t0 + off);
+            g.gain.exponentialRampToValueAtTime(0.001, t0 + off + 0.18);
+            o.connect(g); g.connect(jAudio.destination);
+            o.start(t0 + off); o.stop(t0 + off + 0.19);
+          });
+        } catch (e) {}
+      }
+      function jRenderStageHead() {
+        var chip = $("jTurnChip");
+        if (jAttempt === jOwner) {
+          chip.classList.remove("steal");
+          chip.textContent = "🎯 " + TEAMS[jOwner].name + "'s word";
+        } else {
+          chip.classList.add("steal");
+          chip.textContent = "🚨 Steal: " + TEAMS[jAttempt].name + " is trying!";
+        }
+        $("jWorth").textContent = jWorthPts === 10 ? "Worth 10 pts" : "Worth 5 pts · steal";
+      }
+      function jOpenWord(idx) {
+        if (jOpen) return;
+        if (jPlayedJ[idx] !== undefined) return;
+        if (jOwnerOf(idx) !== jTurn) return;
+        jCurrent = idx;
+        jOwner = jOwnerOf(idx);
+        jAttempt = jOwner;
+        jWorthPts = 10;
+        jTried = {};
+        jOpen = true;
+        $("jStageIdle").hidden = true;
+        $("jFinal").hidden = true;
+        $("jStageGame").hidden = false;
+        $("jStageTitle").textContent = TEAMS[jOwner].name + ": word " + (idx % 5 + 1) + " of 5";
+        var wordEl = $("jWord");
+        wordEl.innerHTML = "";
+        jScramble(JWORDS[idx].w).forEach(function (ch) {
+          var s = document.createElement("span");
+          s.className = "j-letter";
+          s.textContent = ch;
+          wordEl.appendChild(s);
+        });
+        $("jClue").textContent = JWORDS[idx].clue;
+        $("jAnswer").classList.remove("show");
+        $("jActions").style.display = "flex";
+        $("jStatus").innerHTML = "<b>" + TEAMS[jAttempt].name + "</b> is answering. 15 seconds on the clock!";
+        jRenderStageHead();
+        jRenderBoard();
+        jStartTimer();
+      }
+      function jCorrect() {
+        if (!jOpen) return;
+        jStopTimer();
+        scores[jAttempt] += jWorthPts;
+        renderScores();
+        jResolve(jAttempt, jWorthPts);
+      }
+      function jPass(fromTimeout) {
+        if (!jOpen) return;
+        jStopTimer();
+        jTried[jAttempt] = true;
+        var next = -1;
+        for (var k = 1; k < teamCount; k++) {
+          var cand = (jOwner + k) % teamCount;
+          if (!jTried[cand]) { next = cand; break; }
+        }
+        if (next < 0) { jResolve(-1, 0); return; }
+        var prevName = TEAMS[jAttempt].name;
+        jAttempt = next;
+        jWorthPts = 5;
+        $("jStatus").innerHTML = (fromTimeout ? "⏰ Time is up for <b>" + prevName + "</b>! " : "<b>" + prevName + "</b> missed it! ") +
+          "The word passes to <b>" + TEAMS[jAttempt].name + "</b>. Steal it for 5 points, fresh 15 seconds!";
+        jRenderStageHead();
+        jRenderBoard();
+        jStartTimer();
+      }
+      function jResolve(winner, pts) {
+        jOpen = false;
+        jStopTimer();
+        jPlayedJ[jCurrent] = winner;
+        $("jAnsWord").textContent = "🔤 " + JWORDS[jCurrent].w;
+        $("jAnsNote").textContent = winner >= 0
+          ? "🏆 " + TEAMS[winner].name + " got it: +" + pts + " points!"
+          : "Nobody got it this time. No points. On to the next word! ➡️";
+        $("jAnswer").classList.add("show");
+        $("jActions").style.display = "none";
+        $("jNextBtn").textContent = jAllDone() ? "🏆 See the final standings" : "▶ Next word: " + TEAMS[(jOwner + 1) % teamCount].name;
+        jTurn = (jOwner + 1) % teamCount;
+        $("jStatus").innerHTML = "";
+        renderTurn();
+        jRenderBoard();
+      }
+      function jShowFinal() {
+        $("jStageGame").hidden = true;
+        $("jStageIdle").hidden = true;
+        $("jFinal").hidden = false;
+        var order = [];
+        for (var i = 0; i < teamCount; i++) order.push(i);
+        order.sort(function (a, b) { return scores[b] - scores[a]; });
+        var best = scores[order[0]];
+        var winners = order.filter(function (i) { return scores[i] === best; });
+        $("jFinalTitle").textContent = winners.length > 1
+          ? "🤝 It is a tie: " + winners.map(function (i) { return TEAMS[i].name; }).join(" & ") + "!"
+          : "🏆 " + TEAMS[winners[0]].name + " wins!";
+        var box = $("jStandings");
+        box.innerHTML = "";
+        order.forEach(function (i) {
+          var row = document.createElement("div");
+          row.className = "stand-row" + (scores[i] === best ? " winner" : "");
+          var nm = document.createElement("span");
+          nm.textContent = (scores[i] === best ? "🏆 " : "") + TEAMS[i].name;
+          var pt = document.createElement("span");
+          pt.className = "pts";
+          pt.textContent = scores[i] + " pts";
+          row.appendChild(nm); row.appendChild(pt);
+          box.appendChild(row);
+        });
+      }
+      function jResetGame() {
+        jStopTimer();
+        jPlayedJ = {}; jTried = {};
+        jCurrent = -1; jOwner = -1; jAttempt = -1;
+        jTurn = 0; jOpen = false; jWorthPts = 10;
+        $("jStageGame").hidden = true;
+        $("jFinal").hidden = true;
+        $("jStageIdle").hidden = false;
+        renderTurn();
+        jRenderBoard();
+      }
+      function switchTab(name) {
+        activeTab = name;
+        $("tabSong").classList.toggle("active", name === "song");
+        $("tabJumble").classList.toggle("active", name === "jumble");
+        $("songView").hidden = name !== "song";
+        $("jumbleView").hidden = name !== "jumble";
+        $("songControls").hidden = name !== "song";
+        $("jumbleControls").hidden = name !== "jumble";
+        if (name !== "song" && typeof stopPlayback === "function") stopPlayback();
+        if (name !== "song" && typeof guessStopTimer === "function") guessStopTimer();
+        if (name !== "jumble" && jOpen && !jPaused) { jPaused = true; jUpdateTimerUI(); }
+        if (name === "jumble") jRenderBoard();
+        renderTurn();
+      }
+      var jSampleStep = 1, J_SAMPLE_STEPS = 5;
+      function jShowSampleStep(n) {
+        jSampleStep = Math.max(1, Math.min(J_SAMPLE_STEPS, n));
+        var steps = document.querySelectorAll("[data-jstep]");
+        for (var i = 0; i < steps.length; i++) {
+          steps[i].classList.toggle("show", Number(steps[i].getAttribute("data-jstep")) === jSampleStep);
+        }
+        var dots = $("jSampleDots");
+        dots.innerHTML = "";
+        for (var d = 1; d <= J_SAMPLE_STEPS; d++) {
+          var dot = document.createElement("i");
+          if (d === jSampleStep) dot.className = "on";
+          dots.appendChild(dot);
+        }
+        $("jSampleCount").textContent = "Step " + jSampleStep + " of " + J_SAMPLE_STEPS;
+        $("jSampleBackBtn").disabled = jSampleStep === 1;
+        $("jSampleNextBtn").textContent = jSampleStep === J_SAMPLE_STEPS ? "Start the real game →" : "Next →";
+      }
+      function jOpenSample() { jShowSampleStep(1); $("jSampleBackdrop").classList.add("open"); }
+      function jCloseSample() { $("jSampleBackdrop").classList.remove("open"); }
+      document.addEventListener("DOMContentLoaded", function () {
+        jRenderBoard();
+        $("tabSong").addEventListener("click", function () { switchTab("song"); });
+        $("tabJumble").addEventListener("click", function () { switchTab("jumble"); });
+        $("jCorrectBtn").addEventListener("click", jCorrect);
+        $("jPassBtn").addEventListener("click", function () { jPass(false); });
+        $("jPauseBtn").addEventListener("click", function () {
+          if (!jOpen) return;
+          jPaused = !jPaused;
+          jUpdateTimerUI();
+        });
+        $("jNextBtn").addEventListener("click", function () {
+          if (jAllDone()) { jShowFinal(); return; }
+          var idx = jFirstUnplayed(jTurn);
+          if (idx >= 0) jOpenWord(idx);
+        });
+        $("jAgainBtn").addEventListener("click", jResetGame);
+        $("jResetBtn").addEventListener("click", jResetGame);
+        $("jSampleBtn").addEventListener("click", jOpenSample);
+        $("jSampleCloseBtn").addEventListener("click", jCloseSample);
+        $("jSampleBackBtn").addEventListener("click", function () { jShowSampleStep(jSampleStep - 1); });
+        $("jSampleNextBtn").addEventListener("click", function () {
+          if (jSampleStep >= J_SAMPLE_STEPS) jCloseSample();
+          else jShowSampleStep(jSampleStep + 1);
+        });
+        $("jSampleBackdrop").addEventListener("click", function (e) {
+          if (e.target === $("jSampleBackdrop")) jCloseSample();
+        });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") jCloseSample();
+        });
+      });
+    </script>
+  </body>
+</html>
