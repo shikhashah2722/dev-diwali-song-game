@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="dark" />
     <link rel="icon" href="data:," />
-    <title>Dev-Diwali Games: Guess the Song and Jumbled Words</title>
+    <title>Shikha &amp; Divy's Diwali Party: Guess the Song and Jumbled Words</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Mukta:wght@400;600;700;800&display=swap" rel="stylesheet" />
@@ -111,7 +111,25 @@
         gap: 0.75rem;
         padding: 0.75rem 1.4rem 0.25rem;
       }
-      .scoreboard.t4 { grid-template-columns: repeat(4, 1fr); }
+      .scoreboard.t6 { grid-template-columns: repeat(6, 1fr); }
+      main.layout { transition: grid-template-columns 0.35s ease; }
+      main.layout.focus { grid-template-columns: minmax(170px, 2fr) 10fr; }
+      main.layout.focus .board-panel { padding: 0.7rem; }
+      main.layout.focus .grid { gap: 0.35rem; }
+      main.layout.focus .tile { font-size: 0.95rem; border-radius: 0.5rem; }
+      main.layout.focus .diff-head h3 { font-size: 0.95rem; }
+      main.layout.focus .stage-panel { padding: 1.6rem 1.8rem 1.9rem; }
+      main.layout.focus .keyline { font-size: clamp(1.7rem, 3.9vw, 2.9rem); }
+      .cheatsheet {
+        margin: 0 1.4rem 1rem; background: rgba(61, 13, 22, 0.75);
+        border: 1px solid var(--line); border-radius: 1rem; box-shadow: var(--shadow);
+        padding: 1rem 1.3rem 1.1rem;
+      }
+      .cheatsheet h2 { font-family: "Rozha One", serif; font-weight: 400; margin: 0 0 0.5rem; color: var(--gold-bright); font-size: 1.3rem; }
+      .cheatsheet ul { margin: 0; padding-left: 1.25rem; color: var(--cream-dim); font-size: 1.02rem; line-height: 1.6; }
+      .cheatsheet ul b { color: var(--cream); }
+      .cheatsheet .cs-gold { color: var(--gold-bright); font-weight: 800; }
+      .cheatsheet .cs-pink { color: var(--pink); font-weight: 800; }
       .team {
         background: var(--panel);
         border: 1px solid var(--line);
@@ -496,10 +514,109 @@
       .mini-timer .bar { height: 0.75rem; border-radius: 999px; background: rgba(253, 243, 216, 0.15); overflow: hidden; }
       .mini-timer .fill { height: 100%; width: 60%; background: linear-gradient(90deg, var(--marigold), var(--gold-bright)); }
       .mini-timer .t { text-align: center; font-weight: 800; color: var(--gold-bright); margin-top: 5px; }
+      .tie-bar {
+        display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;
+        margin: 0.6rem 1.4rem 0; padding: 0.7rem 1rem;
+        background: rgba(61, 13, 22, 0.75); border: 1px dashed rgba(255, 93, 126, 0.65);
+        border-radius: 0.9rem;
+      }
+      .tie-bar p { margin: 0; color: var(--cream-dim); font-size: 0.98rem; }
+      .tie-bar p b { color: var(--cream); }
+      .tie-backdrop {
+        position: fixed; inset: 0; z-index: 70;
+        background: rgba(16, 2, 5, 0.86);
+        display: none; align-items: flex-start; justify-content: center;
+        overflow-y: auto; padding: 1.4rem 0.9rem;
+      }
+      .tie-backdrop.open { display: flex; }
+      .tie-card {
+        background: linear-gradient(180deg, var(--panel2), var(--panel));
+        border: 1px solid var(--pink); border-radius: 1.1rem; box-shadow: var(--shadow);
+        width: min(94vw, 46rem); padding: 1.4rem 1.6rem 1.5rem; margin: auto 0;
+      }
+      .tie-card h2 { font-family: "Rozha One", serif; font-weight: 400; margin: 0; color: var(--gold-bright); font-size: clamp(1.5rem, 3vw, 2rem); }
+      .tie-explain { color: var(--cream-dim); font-size: 1.05rem; line-height: 1.55; margin: 0.5rem 0 0; }
+      .tie-explain b { color: var(--cream); }
+      .tie-answer-note {
+        margin-top: 0.9rem; border: 1px dashed var(--gold-dim); border-radius: 0.75rem;
+        background: rgba(233, 185, 73, 0.07); padding: 0.6rem 1rem; font-size: 1.02rem; display: none;
+      }
+      .tie-answer-note.show { display: block; }
+      .tie-answer-note b { color: var(--gold-bright); }
+      .tie-teams { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-top: 0.6rem; }
+      .tie-result { text-align: center; font-weight: 800; font-size: 1.15rem; color: var(--gold-bright); min-height: 1.4em; margin: 0.9rem 0 0; }
+      .host-answers {
+        margin: 0 1.4rem 1rem; background: rgba(61, 13, 22, 0.75);
+        border: 1px solid var(--line); border-radius: 1rem; box-shadow: var(--shadow);
+        padding: 1rem 1.3rem 1.1rem;
+      }
+      .host-answers-head { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+      .host-answers h2 { font-family: "Rozha One", serif; font-weight: 400; margin: 0; color: var(--gold-bright); font-size: 1.3rem; }
+      .host-answers .ha-note { color: var(--cream-dim); font-size: 0.95rem; margin: 4px 0 0; }
+      .ha-group { margin-top: 1rem; }
+      .ha-group h3 { margin: 0 0 0.45rem; font-size: 1.05rem; font-weight: 800; }
+      .ha-group.ha-easy h3 { color: var(--green); }
+      .ha-group.ha-medium h3 { color: var(--gold-bright); }
+      .ha-group.ha-hard h3 { color: var(--pink); }
+      .ha-row {
+        display: grid; grid-template-columns: 2.2rem 1fr auto; gap: 0.6rem; align-items: baseline;
+        padding: 0.4rem 0.5rem; border-top: 1px solid rgba(233, 185, 73, 0.14); font-size: 0.93rem; line-height: 1.4;
+      }
+      .ha-row .ha-num { font-weight: 800; color: var(--gold-bright); text-align: center; }
+      .ha-row .ha-clue { color: var(--cream-dim); }
+      .ha-row .ha-ans { color: var(--cream); font-weight: 700; text-align: right; }
+      .ha-row .ha-ans span { color: var(--cream-dim); font-weight: 400; }
+      .ha-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+      /* ---------- Printable host cheatsheet (print only) ---------- */
+      .print-sheet { display: none; }
+      @media print {
+        @page { size: A4; margin: 9mm; }
+        html, body { background: #ffffff !important; min-height: 0; }
+        body > *:not(.print-sheet) { display: none !important; }
+        .print-sheet {
+          display: block !important;
+          color: #111111;
+          font-family: "Mukta", Arial, sans-serif;
+          font-size: 9pt;
+          line-height: 1.3;
+        }
+        .ps-head { border-bottom: 2px solid #111111; padding-bottom: 4px; margin-bottom: 5px; }
+        .ps-head h1 {
+          font-family: "Mukta", Arial, sans-serif; font-size: 15pt; font-weight: 800;
+          color: #111111; margin: 0; letter-spacing: 0; line-height: 1.15;
+        }
+        .ps-head p { margin: 2px 0 0; font-size: 8.5pt; color: #333333; }
+        .ps-rules { border: 1px solid #111111; border-radius: 4px; padding: 4px 8px; margin-bottom: 7px; font-size: 8.8pt; }
+        .ps-rules p { margin: 0; }
+        .ps-group { margin-bottom: 6px; }
+        .ps-group h2 { font-size: 10.5pt; margin: 0 0 2px; font-weight: 800; border-bottom: 1px solid #999999; padding-bottom: 1px; }
+        .ps-row {
+          display: grid; grid-template-columns: 20px 1fr auto; gap: 6px;
+          padding: 2px 1px; border-bottom: 0.5pt solid #cccccc; align-items: baseline;
+          page-break-inside: avoid;
+        }
+        .ps-num { font-weight: 800; text-align: center; }
+        .ps-clue { color: #222222; }
+        .ps-ans { font-weight: 700; text-align: right; white-space: nowrap; }
+        .ps-ans span { font-weight: 400; color: #333333; }
+        .ps-tie { border: 1.5px solid #111111; border-radius: 4px; padding: 5px 8px; margin-top: 7px; page-break-inside: avoid; }
+        .ps-tie h2 { font-size: 10.5pt; margin: 0 0 2px; font-weight: 800; }
+        .ps-tie p { margin: 1px 0; }
+        .ps-tie .ps-tie-ans { font-weight: 700; }
+      }
+      @media (max-width: 900px) {
+        .tie-bar { margin: 0.5rem 0.75rem 0; }
+        .host-answers { margin: 0 0.75rem 0.85rem; }
+        .ha-row { grid-template-columns: 2rem 1fr; }
+        .ha-row .ha-ans { grid-column: 2; text-align: left; }
+      }
       @media (max-width: 900px) {
         .scoreboard { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; padding: 0.6rem 0.75rem 2px; }
         .scoreboard .team:last-child { grid-column: span 2; }
-        .scoreboard.t4 .team:last-child { grid-column: auto; }
+        .scoreboard.t6 .team:last-child { grid-column: auto; }
+        .cheatsheet { margin: 0 0.75rem 0.85rem; }
+        main.layout.focus { grid-template-columns: 1fr; }
+        main.layout.focus .board-panel { padding: 0.6rem; }
         .team { padding: 7px 8px 9px; }
         .team input { font-size: 1rem; }
         .team .adj button { padding: 1px 9px; }
@@ -519,14 +636,14 @@
     <div class="toran" aria-hidden="true"></div>
     <header class="topbar">
       <div class="title-block">
-        <h1>🪔 Dev-Diwali Games</h1>
+        <h1>🪔 Shikha &amp; Divy's Diwali Party</h1>
         <p class="subtitle">Both party games in one place: Guess the Song and Diwali Jumbled Words, with the same teams and one shared scoreboard. Pick a game below!</p>
       </div>
       <div class="controls">
         <div class="team-count" role="group" aria-label="Number of teams">
           <span>Teams</span>
-          <button id="teams4Btn" type="button">4</button>
           <button id="teams5Btn" type="button" class="active">5</button>
+          <button id="teams6Btn" type="button">6</button>
         </div>
         <div class="font-count" role="group" aria-label="Text size">
           <span>Text size</span>
@@ -544,6 +661,7 @@
           <button id="jResetBtn" type="button">↺ Reset words</button>
         </div>
         <button id="fsBtn" type="button">⛶ Fullscreen</button>
+        <button id="soundBtn" type="button" aria-pressed="false" aria-label="Mute sounds">🔊 Sounds on</button>
       </div>
     </header>
     <nav class="tabs" aria-label="Choose a game">
@@ -551,8 +669,12 @@
       <button id="tabJumble" class="tab" type="button">🔤 Jumbled Words</button>
     </nav>
     <section class="scoreboard" id="scoreboard" aria-label="Team scores"></section>
+    <section class="tie-bar" aria-label="Tie-breaker">
+      <p>🤝 <b>Tied at the top?</b> Play one quick hard song as the decider — first tied team to shout it wins.</p>
+      <button id="tieBtn" class="gold" type="button">⚡ Tie-breaker</button>
+    </section>
     <div id="songView">
-    <main class="layout">
+    <main class="layout" id="songLayout">
       <section class="board-panel" aria-label="Song board">
         <div class="board-head">
           <h2>Pick a number</h2>
@@ -566,7 +688,7 @@
           <h3>How to play</h3>
           <p>Pick a number from Easy, Medium or Hard, or hit <b>Shuffle</b>. Three famous lines from a song appear here, big enough for the whole room, translated into plain English.</p>
           <p>Read all the lines together and think of how they go in the <b>original language</b>. Teams take turns in order. The team on turn, glowing on the scoreboard, guesses first.</p>
-          <p>Scoring: <b>Easy 5 points, Medium 10 points, Hard 15 points</b>. Each song has <b>one hint</b> (the movie and year). Using it <b>halves the points</b>, rounded up: Easy 3, Medium 5, Hard 8. Every guess has a <b>30 second timer</b>. If a team misses or time runs out, the turn passes to the <b>next team</b>, who can steal for half points with a fresh 30 seconds. Once a song is revealed, its number is <b>ticked off and greyed out</b> on the board, so it can't be picked again. After the reveal, the song plays from the clue line for 1 minute.</p>
+          <p>Scoring: <b>Easy 5 points, Medium 10 points, Hard 15 points</b>. Each song has <b>one hint</b> (the movie and year). Using it <b>halves the points</b>, rounded up: Easy 3, Medium 5, Hard 8. Every guess has a <b>30 second timer</b>. If a team misses or time runs out, the turn passes to the <b>next team</b>, who can steal for half points with a fresh 30 seconds. Once a song is revealed, its number is <b>ticked off and greyed out</b> on the board, so it can't be picked again. After the reveal, the song plays from the clue line for 30 seconds.</p>
         </div>
         <div id="stageGame" hidden>
           <div class="stage-head">
@@ -597,7 +719,7 @@
             <p class="lyric" id="ansLyric"></p>
             <p class="words" id="ansWords"></p>
             <div class="stage-actions">
-              <button id="playBtn" class="gold big" type="button">▶ Play from the clue line (1 minute)</button>
+              <button id="playBtn" class="gold big" type="button">▶ Play from the clue line (30 seconds)</button>
               <button id="stopBtn" type="button" hidden>⏹ Stop</button>
             </div>
             <p class="yt-note" id="ytNote"></p>
@@ -605,7 +727,7 @@
               <div class="player-frame"><div id="ytPlayer"></div></div>
               <div class="countdown" id="countdown">
                 <div class="bar"><div class="fill" id="cdFill"></div></div>
-                <div class="time" id="cdTime">1:00</div>
+                <div class="time" id="cdTime">0:30</div>
               </div>
             </div>
             <div class="award" id="award">
@@ -616,6 +738,29 @@
         </div>
       </section>
     </main>
+    <section class="cheatsheet" aria-label="Host cheatsheet">
+      <h2>🪔 Host cheatsheet: Correct, Wrong, hint &amp; steal</h2>
+      <ul>
+        <li><span class="cs-gold">✅ Tap Correct</span> when the team on turn <b>names the song</b> (title, or the famous hook line sung back) before the 30 seconds run out. The song is revealed and that team gets the points shown on the badge.</li>
+        <li><b>😬 Tap Missed / Wrong</b> when the team gives a <b>wrong song</b>, says they don't know, or the <b>timer runs out</b> (timeout passes automatically). Don't reveal yet — the song moves on as a steal.</li>
+        <li><b>💡 The one hint</b> (movie + year) can be used <b>once per song</b>. It <b>halves the points</b>, rounded up — Easy 5 → <b>3</b>, Medium 10 → <b>5</b>, Hard 15 → <b>8</b> — for whichever team ends up answering, including on a steal.</li>
+        <li><span class="cs-pink">🚨 Steal:</span> after a miss or timeout, the <b>next team</b> gets the same lines with a <b>fresh 30 seconds</b> and can steal for <b>half points</b> (Easy 3, Medium 5, Hard 8). If every team misses, tap <b>🎉 Reveal the song</b> — nobody scores, the number ticks off grey with a ✓, and the turn passes to the next team.</li>
+        <li><b>🎉 Reveal the song</b> ends the round: the answer shows, then <b>▶ Play</b> runs the video from the clue line for <b>30 seconds</b> max. Played numbers stay greyed out and can't be picked again.</li>
+      </ul>
+    </section>
+    <section class="host-answers" aria-label="Host answers cheatsheet">
+      <div class="host-answers-head">
+        <div>
+          <h2>🔐 Host answers — all 45 songs</h2>
+          <p class="ha-note">Kept hidden so the room can't see the answers. Tap to open it only when you need to check which song a clue belongs to.</p>
+        </div>
+        <div class="ha-actions">
+          <button id="hostAnswersToggle" type="button" aria-expanded="false">Show answers</button>
+          <button id="printCheatsheetBtn" class="gold" type="button">🖨 Print cheatsheet</button>
+        </div>
+      </div>
+      <div id="hostAnswersBody" hidden></div>
+    </section>
     <footer class="host-tip">
       <b>Host tip:</b> shout the rule before Round 1: “The 3 lines on screen are the song's most famous lines, translated flat into English. Read them all together and think of how they go in the original!” 🪔
     </footer>
@@ -680,6 +825,45 @@
       <footer class="host-tip">
         <b>Host tip:</b> read the clue out loud the moment the word opens. 15 seconds fly by, and the whole room will start shouting along! 🪔
       </footer>
+    </div>
+    <section class="print-sheet" id="printSheet" aria-label="Printable host cheatsheet"></section>
+    <div class="tie-backdrop" id="tieBackdrop" role="dialog" aria-modal="true" aria-labelledby="tieTitle">
+      <div class="tie-card">
+        <div class="sample-head">
+          <div>
+            <h2 id="tieTitle">⚡ Tie-breaker — Hard · 15 points</h2>
+            <p class="tie-explain">For the <b>tied teams only</b>: they shout the answer out loud, and the <b>first team to get it right wins</b>. Tap <b>Correct</b> on that team below and they get <b>15 points</b> and win the tie. If nobody gets it, you can <b>replay the clip once</b> or call it a <b>shared win</b>.</p>
+          </div>
+          <button class="sample-close" id="tieCloseBtn" type="button" aria-label="Close tie-breaker">✕</button>
+        </div>
+        <p class="keyline-label">Tie-breaker song · 3 lines, in English · Hard</p>
+        <div class="keyline" id="tieLines"></div>
+        <div class="guess-timer">
+          <div class="t-num" id="tieTimeNum">30</div>
+          <div class="countdown show"><div class="bar"><div class="fill" id="tieFill"></div></div></div>
+          <div class="t-label">seconds to guess</div>
+        </div>
+        <div class="stage-actions">
+          <button id="tiePlayBtn" class="gold" type="button">▶ Play the clip (30 seconds)</button>
+          <button id="tieStopBtn" type="button" hidden>⏹ Stop</button>
+          <button id="tieReplayBtn" type="button">↺ Replay clip (once)</button>
+          <button id="tieAnswerBtn" type="button">🔐 Show answer (host only)</button>
+        </div>
+        <div class="tie-answer-note" id="tieAnswerNote"></div>
+        <div class="player-wrap" id="tiePlayerWrap">
+          <div class="player-frame"><div id="tiePlayer"></div></div>
+          <div class="countdown" id="tieCountdown">
+            <div class="bar"><div class="fill" id="tieCdFill"></div></div>
+            <div class="time" id="tieCdTime">0:30</div>
+          </div>
+        </div>
+        <p style="text-align:center;font-weight:700;margin:1.1rem 0 0">Who got it first? Tap Correct on that team:</p>
+        <div class="tie-teams" id="tieTeams"></div>
+        <div class="stage-actions">
+          <button id="tieSharedBtn" type="button">🤝 Nobody got it — call it a shared win</button>
+        </div>
+        <p class="tie-result" id="tieResult"></p>
+      </div>
     </div>
     <div class="sample-backdrop" id="jSampleBackdrop" role="dialog" aria-modal="true" aria-labelledby="jSampleTitle">
       <div class="sample-card">
@@ -784,7 +968,7 @@
             <p class="movie">from Kal Ho Naa Ho · 2003</p>
             <p class="lyric">“Har pal yahaan jee bhar jiyo, jo hai samaan, kal ho naa ho…”</p>
           </div>
-          <p>The song, its movie and the original line appear. Hit <b>▶ Play</b> and the video starts <b>at the clue line</b>, not from the beginning, and stops on its own after 1 minute.</p>
+          <p>The song, its movie and the original line appear. Hit <b>▶ Play</b> and the video starts <b>at the clue line</b>, not from the beginning, and stops on its own after 30 seconds.</p>
         </div>
         <div class="sample-step" data-step="5">
           <h3><span class="step-no">5 of 6</span>Points, or a steal for the next team</h3>
@@ -804,7 +988,7 @@
             <div class="mini-tile">10</div><div class="mini-tile">11</div><div class="mini-tile">12</div>
           </div>
           <div class="mini-turn"><span class="turn-chip">🎯 Next turn: Team Mohanthal</span></div>
-          <p>That is one full round! Keep going until all 30 numbers are gone. The team with the most points wins the dhamaka. 🏆</p>
+          <p>That is one full round! Keep going until all 45 numbers are gone. The team with the most points wins the dhamaka. 🏆</p>
         </div>
         <div class="sample-nav">
           <button id="sampleBackBtn" type="button">← Back</button>
@@ -832,6 +1016,11 @@
         { diff: "easy", lines: ["Keep your henna applied and ready", "Keep the bridal carriage decorated and ready", "Your beloved will come to take you away, fair one"], title: "Mehndi Laga Ke Rakhna", movie: "Dilwale Dulhania Le Jayenge", year: 1995, lyric: "“Mehndi laga ke rakhna, doli saja ke rakhna, lene tujhe o gori aayenge tere sajna…”", words: "Mehndi (henna) · laga ke rakhna (keep applied) · doli (bridal carriage) · saja ke rakhna (keep decorated)", vid: "-bNwqXvMuB8", start: 0 },
         { diff: "easy", lines: ["Your love is the colour of saffron, my beloved", "If I touch it, I take on its colour", "My whole day passes thinking only of you"], title: "Kesariya", movie: "Brahmastra", year: 2022, lyric: "“Kesariya tera ishq hai piya, rang jaaun jo main haath lagaun…”", words: "Kesariya (saffron coloured) · ishq (love) · piya (beloved) · rang jaaun (I take on the colour)", vid: "BddP6PYo2gs", start: 0 },
         { diff: "easy", lines: ["They say that in this world, God made someone for everyone", "a person for every single person", "and meeting you is a sign from God"], title: "Raabta", movie: "Agent Vinod", year: 2012, lyric: "“Kehte hain khuda ne is jahaan mein sabhi ke liye, kisi na kisi ko hai banaya har kisi ke liye…”", words: "Raabta (a connection) · kehte hain khuda (they say God) · banaya (made) · har kisi ke liye (for everyone)", vid: "zlt38OOqwDc", start: 0 },
+        { diff: "easy", lines: ["She's on the dance floor", "All eyes turn to watch her", "Light up the night, steal the show"], title: "Radha", movie: "Student of the Year", year: 2012, lyric: "\u201CRadha on the dance floor, Radha likes to party\u2026\u201D", words: "Radha (her name) \u00B7 the dance floor anthem of the film", vid: "21WUNX0JiYo", start: 20 },
+        { diff: "easy", lines: ["She's the talk of the town", "Everyone knows her name", "She did it all for you, darling"], title: "Munni Badnaam Hui", movie: "Dabangg", year: 2010, lyric: "\u201CMunni badnaam hui, darling tere liye\u2026\u201D", words: "Munni (her name) \u00B7 badnaam (defamed, talked about) \u00B7 hui (became) \u00B7 darling tere liye (for you, darling)", vid: "Jn5hsfbhWx4", start: 5 },
+        { diff: "easy", lines: ["Today's the day, today is the promise", "Look, I've arrived, now you come quickly too", "Don't keep me waiting any longer"], title: "Jumma Chumma De De", movie: "Hum", year: 1991, lyric: "\u201CAaj jumma hai, aaj ka vaada hai, dekh main aa gaya, tu bhi jaldi aa\u2026 jumma chumma de de\u2026\u201D", words: "Jumma (Friday) \u00B7 chumma (a kiss) \u00B7 de de (give me) \u00B7 vaada (the promise)", vid: "pQTFg2soCR0", start: 70 },
+        { diff: "easy", lines: ["Move your feet to the rhythm", "The whole town is watching you", "Come on, show them your moves"], title: "Ek Do Teen", movie: "Tezaab", year: 1988, lyric: "\u201CEk do teen, chaar paanch, chhe saath, aath nau, das gyarah, baarah terah\u2026\u201D", words: "Ek do teen (one, two, three) \u00B7 the famous counting song", vid: "9aUmlOzlHTc", start: 15 },
+        { diff: "easy", lines: ["The evening is falling", "The light is fading away", "Hold me close tonight"], title: "Suraj Hua Maddham", movie: "Kabhi Khushi Kabhie Gham", year: 2001, lyric: "\u201CSuraj hua maddham, chaand jalne laga\u2026\u201D", words: "Suraj (the sun) \u00B7 hua maddham (grew dim) \u00B7 chaand (the moon)", vid: "L0zKs8i7Nc8", start: 8 },
         { diff: "medium", lines: ["An innocent face, mischief in her eyes", "Standing far away, she blushes shyly", "Now and then she shows a glimpse, then hides away"], title: "Bholi Si Surat", movie: "Dil To Pagal Hai", year: 1997, lyric: "“Bholi si surat, aankhon mein masti…”", words: "Bholi si surat (an innocent face) · aankhon mein masti (mischief in the eyes)", vid: "kOvXnRCo1xo", start: 0 },
         { diff: "medium", lines: ["Drummer, let your drum beat!", "Beat it, beat it, boom, boom, let the drum thunder!", "Oh drummer, your beating drum calls us all to dance"], title: "Dholi Taro Dhol Baje", movie: "Hum Dil De Chuke Sanam", year: 1999, lyric: "“Dholi taro dhol baaje…”", words: "Dholi (the drummer) · taro (your) · baaje (beats)", vid: "Tfjoyp0g5HA", start: 0 },
         { diff: "medium", lines: ["A first high, a first sweet daze", "This is a new love, a new waiting", "Tell me, what should I do with this restless heart?"], title: "Pehla Nasha", movie: "Jo Jeeta Wohi Sikandar", year: 1992, lyric: "“Pehla nasha, pehla khumar, naya pyaar hai, naya intezaar…”", words: "Pehla (first) · nasha (intoxication) · khumar (the sweet daze after)", vid: "iSUK1QoK9-E", start: 0 },
@@ -842,6 +1031,11 @@
         { diff: "medium", lines: ["My scarf keeps flying and flying in the air", "Every pair of eyes keeps turning to look", "Something strange stirs inside my chest"], title: "Odhani", movie: "Made in China", year: 2019, lyric: "“Odhani ude ude re, akhiyaan mude mude re, mere seene mein kuch kuch thaye…”", words: "Odhani (scarf) · ude (flies) · akhiyaan (eyes) · mude (turn)", vid: "C7u6rtswjCU", start: 0 },
         { diff: "medium", lines: ["Let the eyes meet, let the lightning strike", "I'll tie on my dancing bells, I'll wear my anklets", "I'll dance swaying, I'll dance spinning"], title: "Dola Re Dola", movie: "Devdas", year: 2002, lyric: "“Dola re dola re dola re dola…”", words: "Dola (swayed) · re (oh). Pure spinning", vid: "iZ5UItyEpGE", start: 0 },
         { diff: "medium", lines: ["I keep talking only about you", "your meetings often come to mind", "winning your love is my madness"], title: "Jhalak Dikhla Ja", movie: "Aksar", year: 2006, lyric: "“Jhalak dikhla ja (show me a glimpse), ek baar aaja aaja aaja…”", words: "Jhalak (a glimpse) · dikhla ja (show me). The hook line is: show me a glimpse, just come once", vid: "vnlk8V-q0oU", start: 0 },
+        { diff: "medium", lines: ["Oh traveller, tell me", "Where does the heart find peace", "Show me the way, I'm searching"], title: "Kabira", movie: "Yeh Jawaani Hai Deewani", year: 2013, lyric: "\u201CRe Kabira maan ja, re fakira yun na ja\u2026\u201D", words: "Kabira (the wandering poet-saint) \u00B7 re (oh!) \u00B7 maan ja (listen, agree)", vid: "jHNNMj5bNQw", start: 33 },
+        { diff: "medium", lines: ["My love, my dearest", "You're the one I want", "Come to me, my love"], title: "Laila O Laila", movie: "Qurbani", year: 1980, lyric: "\u201CLaila o Laila, Laila, aisi hoon Laila\u2026\u201D", words: "Laila (her name, the beloved) \u00B7 o (oh!)", vid: "bC_NKZyk_eE", start: 8 },
+        { diff: "medium", lines: ["Since you arrived", "Everything has changed", "My life is brand new"], title: "Aaye Ho Meri Zindagi Mein", movie: "Raja Hindustani", year: 1996, lyric: "\u201CAaye ho meri zindagi mein tum bahaar banke\u2026\u201D", words: "Aaye ho (you have come) \u00B7 meri zindagi mein (into my life) \u00B7 bahaar (spring) \u00B7 banke (as, becoming)", vid: "l-QyZZZkMOE", start: 8 },
+        { diff: "medium", lines: ["Those eyes of yours", "They haunt me day and night", "I can't look away"], title: "Yeh Kaali Kaali Aankhen", movie: "Baazigar", year: 1993, lyric: "\u201CYeh kaali kaali aankhen, yeh gore gore gaal\u2026\u201D", words: "Yeh (these) \u00B7 kaali kaali (black black) \u00B7 aankhen (eyes)", vid: "mkqOFYxJfJc", start: 8 },
+        { diff: "medium", lines: ["I'm no hero, that's for sure", "But my heart is true", "Call me what you will"], title: "Nayak Nahi Khalnayak", movie: "Khalnayak", year: 1993, lyric: "\u201CNayak nahi khalnayak hoon main\u2026\u201D", words: "Nayak (hero) \u00B7 nahi (not) \u00B7 khalnayak (villain) \u00B7 hoon main (I am)", vid: "5ugZDp72FjM", start: 8 },
         { diff: "hard", lines: ["O my star, oh my charming star", "Oh my colourful star, oh my shining star", "Your anklets chime and the whole ground lights up"], title: "Chogada", movie: "Loveyatri", year: 2018, lyric: "“Chogada tara, chabila tara…”", words: "Chogada tara (star of mine) · chabila tara (charming one of mine)", vid: "BzcKINXf-rs", start: 0 },
         { diff: "hard", lines: ["Steady yourself, my heart, just a little", "You are setting out to fall in love again", "Sit here a moment and understand where you have come"], title: "Dil Sambhal Ja Zara", movie: "Murder 2", year: 2011, lyric: "“Dil sambhal ja zara, phir mohabbat karne chala hai tu.”", words: "Dil (heart) · sambhal (steady yourself) · ja (go on) · zara (just a little)", vid: "NRHIBKNNzAk", start: 0 },
         { diff: "hard", lines: ["That waist of hers twists and sways", "Her waist twists, oh, her waist sways and twists", "When she dances, that waist twists and turns"], title: "Kamariya", movie: "Mitron", year: 2018, lyric: "“Kamariya… kamariya lachke re…”", words: "Kamariya (the waist) · lachke (twists) · re (oh!)", vid: "i0_m90T04uw", start: 0 },
@@ -851,23 +1045,34 @@
         { diff: "hard", lines: ["If the chili burned you, what am I to do?", "If the chili burned you, what can I do?", "If the spice made your eyes water, what am I to do?"], title: "Tujhe Mirchi Lagi Toh", movie: "Coolie No. 1", year: 2020, lyric: "“Tujhe mirchi lagi toh main kya karoon…”", words: "Tujhe (you) · mirchi (chili) · lagi (burned) · toh (so) · main kya karoon (what can I do)", vid: "EQlYzDdOLxI", start: 0 },
         { diff: "hard", lines: ["Someone who already aches for you", "why make them ache even more, you cruel one?", "Someone already lost in your love"], title: "Zaalima", movie: "Raees", year: 2017, lyric: "“Jo teri khatir tadpe pehle se hi, kya use tadpana, o zaalima…”", words: "Zaalima (cruel one) · tadpe (aches and yearns) · khatir (for the sake of)", vid: "lpdRqn6xwiM", start: 0 },
         { diff: "hard", lines: ["Like a fierce bull leaping in the dust of the fields", "like the lead dancer at the village goddess festival", "like twirling sticks while wearing wooden sandals"], title: "Naacho Naacho", movie: "RRR", year: 2022, lyric: "“Naatu naatu… (original version)”", words: "The card uses the original version lines, and the video below is the original version so the audio matches the clue", vid: "OsU0CGZoV8E", start: 0 },
-        { diff: "hard", lines: ["Hold me close, for this beautiful night may never come again", "perhaps in this lifetime, we may never meet again", "these moments have reached us today only by fate"], title: "Lag Ja Gale", movie: "Woh Kaun Thi", year: 1964, lyric: "“Lag ja gale ke phir ye haseen raat ho na ho…”", words: "Lag ja gale (hold me close) · haseen raat (beautiful night) · ho na ho (may or may not happen)", vid: "TFr6G5zveS8", start: 0 }
+        { diff: "hard", lines: ["Hold me close, for this beautiful night may never come again", "perhaps in this lifetime, we may never meet again", "these moments have reached us today only by fate"], title: "Lag Ja Gale", movie: "Woh Kaun Thi", year: 1964, lyric: "“Lag ja gale ke phir ye haseen raat ho na ho…”", words: "Lag ja gale (hold me close) · haseen raat (beautiful night) · ho na ho (may or may not happen)", vid: "TFr6G5zveS8", start: 0 },
+        { diff: "hard", lines: ["O my friend, guide me", "Through the darkest night", "Show me the way, I'm lost"], title: "Ya Ali", movie: "Gangster", year: 2006, lyric: "\u201CYaa Ali reham Ali, yaa Ali yaar pe qurban hai sabhi\u2026\u201D", words: "Ya Ali (O Ali) \u00B7 reham (mercy) \u00B7 yaar (friend, beloved)", vid: "pmHnlBqjpm0", start: 10 },
+        { diff: "hard", lines: ["I call out to you", "Hear my prayer, hear me", "I surrender all to you"], title: "Khwaja Mere Khwaja", movie: "Jodhaa Akbar", year: 2008, lyric: "\u201CKhwaja mere khwaja, dil mein sama ja\u2026\u201D", words: "Khwaja (the revered saint) \u00B7 mere (my) \u00B7 dil mein sama ja (come live in my heart)", vid: "4YbAaRFk70o", start: 35 },
+        { diff: "hard", lines: ["Listen to the call of my heart", "Come to me, my dearest", "My heart calls out to you"], title: "Mitwa", movie: "Kabhi Alvida Naa Kehna", year: 2006, lyric: "\u201CMitwa kahe dhadkanein tujhse kya\u2026\u201D", words: "Mitwa (friend, beloved) \u00B7 kahe (says) \u00B7 dhadkanein (heartbeats) \u00B7 tujhse (to you)", vid: "ru_5PA8cwkE", start: 42 },
+        { diff: "hard", lines: ["What beauty, what grace", "The whole world is watching", "What a sight you are"], title: "Masha-Allah", movie: "Saawariya", year: 2007, lyric: "\u201CMasha-Allah, chehra hai mashallah\u2026\u201D", words: "Masha-Allah (what God has willed, said at the sight of beauty) \u00B7 chehra (face)", vid: "q5Mecg0ycWk", start: 5 },
+        { diff: "hard", lines: ["After every sorrow, joy returns", "That's how it always is", "Life keeps moving on"], title: "Zindagi Ki Yahi Reet Hai", movie: "Mr. India", year: 1987, lyric: "\u201CZindagi ki yahi reet hai, haar ke baad hi jeet hai\u2026\u201D", words: "Zindagi (life) \u00B7 ki yahi reet hai (this is its way) \u00B7 haar (defeat) \u00B7 baad (after) \u00B7 jeet (victory)", vid: "6db52BxXxfQ", start: 5 }
       ];
       var DIFFS = {
         easy: { label: "Easy", pts: 5 },
         medium: { label: "Medium", pts: 10 },
         hard: { label: "Hard", pts: 15 }
       };
+      /* Tie-breaker: one hard song that is NOT on the 45-song board. */
+      var TIE_SONG = {
+        lines: ["Crackling, sparking, blazing bright", "Flashing, swaying, whirling around", "Look what became of the enemy"],
+        title: "Malhari", movie: "Bajirao Mastani", year: 2015, vid: "l_MyUGq7pgs", start: 5, pts: 15
+      };
       var TEAMS = [
         { name: "Team Kaju Katli", color: "#ff5d7e" },
         { name: "Team Jalebi", color: "#ff8c42" },
         { name: "Team Mohanthal", color: "#ffd23e" },
         { name: "Team Barfi", color: "#7fd08c" },
-        { name: "Team Ladoo", color: "#5db3ff" }
+        { name: "Team Ladoo", color: "#5db3ff" },
+        { name: "Team Modak", color: "#c77dff" }
       ];
-      var CLIP_SECONDS = 60;
+      var CLIP_SECONDS = 30;
       var GUESS_SECONDS = 30;
-      var scores = [0, 0, 0, 0, 0];
+      var scores = [0, 0, 0, 0, 0, 0];
       var played = {};
       var awardedTo = {};
       var current = -1;
@@ -881,6 +1086,132 @@
       var turnIdx = 0;
       var guessTimerId = null, guessLeft = GUESS_SECONDS, guessRunning = false;
       function $(id) { return document.getElementById(id); }
+      /* ---------- Funny right / wrong answer sounds (local MP3s in sounds/) ----------
+         Played instantly on the host's taps: Correct plays one right sound at
+         random, and Missed (pass to next team) plays one wrong sound at random —
+         there is no separate Wrong button; Missed is the wrong-answer tap, and a
+         timeout passes the turn the same way. Files sit in a sounds/ folder next
+         to index.html and are preloaded so there is no delay on the tap. */
+      var RIGHT_SOUNDS = [
+        "sounds/right-all-is-well.mp3",
+        "sounds/right-mogambo.mp3",
+        "sounds/right-chak-de.mp3",
+        "sounds/right-dil-garden.mp3",
+        "sounds/right-air-horn.mp3",
+        "sounds/right-tada.mp3",
+        "sounds/right-mauj-kar-di.mp3",
+        "sounds/right-sahi-pakde-hain.mp3"
+      ];
+      var WRONG_SOUNDS = [
+        "sounds/wrong-tumse-na-ho-payega.mp3",
+        "sounds/wrong-dukh.mp3",
+        "sounds/wrong-kaun-hain.mp3",
+        "sounds/wrong-galti-se-mistake.mp3",
+        "sounds/wrong-sad-trombone.mp3",
+        "sounds/wrong-hey-maa-mataji.mp3",
+        "sounds/wrong-aata-majhi-satakli.mp3"
+      ];
+      var AIR_HORN_SRC = "sounds/right-air-horn.mp3";
+      var soundsMuted = false;
+      var soundCache = {};
+      var liveSounds = [];
+      function cacheSound(src) {
+        if (soundCache[src]) return soundCache[src];
+        var a = new Audio();
+        a.preload = "auto";
+        a.src = src;
+        try { a.load(); } catch (e) {}
+        soundCache[src] = a;
+        return a;
+      }
+      function preloadSounds() {
+        RIGHT_SOUNDS.concat(WRONG_SOUNDS).forEach(cacheSound);
+        try { getTimerAudio().load(); } catch (e) {}
+      }
+      function playSoundFile(src) {
+        if (soundsMuted) return;
+        try {
+          var base = cacheSound(src);
+          /* Clone the preloaded element so sounds can overlap and never block the game. */
+          var a = base.cloneNode ? base.cloneNode() : new Audio(src);
+          a.preload = "auto";
+          /* The air horn is a loud distorted clip, so it plays quieter than the rest. */
+          a.volume = src === AIR_HORN_SRC ? 0.35 : 1;
+          liveSounds.push(a);
+          a.addEventListener("ended", function () {
+            var ix = liveSounds.indexOf(a);
+            if (ix >= 0) liveSounds.splice(ix, 1);
+          });
+          var p = a.play();
+          if (p && typeof p.catch === "function") p.catch(function () {});
+        } catch (e) {}
+      }
+      function playRightSound() {
+        playSoundFile(RIGHT_SOUNDS[Math.floor(Math.random() * RIGHT_SOUNDS.length)]);
+      }
+      function playWrongSound() {
+        playSoundFile(WRONG_SOUNDS[Math.floor(Math.random() * WRONG_SOUNDS.length)]);
+      }
+      function stopAllSounds() {
+        liveSounds.forEach(function (a) { try { a.pause(); } catch (e) {} });
+        liveSounds = [];
+        stopTimerSound();
+      }
+      /* ---------- Soothing timer sound for the 30 second guess counter ----------
+         Plays sounds/timer-countdown.mp3 (relative path, same sounds/ folder in
+         the repo) whenever a 30 second guess counter is running — the main song
+         timer and the tie-breaker timer. It loops if the file is shorter than
+         30 seconds, starts from the same tap that starts the counter (the tile
+         pick / tie-breaker open), and stops the moment the counter stops:
+         Correct, Missed, timeout, reveal, reset or closing the tie-breaker.
+         The mute button silences it too, including while it is playing. */
+      var TIMER_SOUND_SRC = "sounds/timer-countdown.mp3";
+      var timerAudio = null;
+      function getTimerAudio() {
+        if (!timerAudio) {
+          timerAudio = new Audio();
+          timerAudio.src = TIMER_SOUND_SRC;
+          timerAudio.loop = true;
+          timerAudio.preload = "auto";
+        }
+        return timerAudio;
+      }
+      function stopTimerSound() {
+        if (!timerAudio) return;
+        try { timerAudio.pause(); timerAudio.currentTime = 0; } catch (e) {}
+      }
+      function syncTimerSound() {
+        try {
+          var tieOn = (typeof tieRunning !== "undefined" && tieRunning);
+          var want = !soundsMuted && (guessRunning || tieOn);
+          if (want) {
+            var a = getTimerAudio();
+            a.loop = true;
+            if (a.paused) {
+              var p = a.play();
+              if (p && typeof p.catch === "function") p.catch(function () {});
+            }
+          } else {
+            stopTimerSound();
+          }
+        } catch (e) {}
+      }
+      function renderSoundBtn() {
+        var btn = $("soundBtn");
+        if (!btn) return;
+        btn.textContent = soundsMuted ? "🔇 Sounds off" : "🔊 Sounds on";
+        btn.setAttribute("aria-pressed", soundsMuted ? "true" : "false");
+        btn.setAttribute("aria-label", soundsMuted ? "Unmute sounds" : "Mute sounds");
+      }
+      function toggleSoundsMuted() {
+        soundsMuted = !soundsMuted;
+        if (soundsMuted) stopAllSounds();
+        /* Muting silences the timer sound too (even mid-play); unmuting resumes
+           it if a 30 second counter is still running. */
+        syncTimerSound();
+        renderSoundBtn();
+      }
+      preloadSounds();
       function fullPoints() { return current < 0 ? 0 : DIFFS[SONGS[current].diff].pts; }
       function halfPoints() { return Math.ceil(fullPoints() / 2); }
       function pointsNow() {
@@ -942,9 +1273,9 @@
       function setTeamCount(n) {
         teamCount = n;
         if (turnIdx >= teamCount) turnIdx = 0;
-        $("teams4Btn").classList.toggle("active", n === 4);
         $("teams5Btn").classList.toggle("active", n === 5);
-        $("scoreboard").classList.toggle("t4", n === 4);
+        $("teams6Btn").classList.toggle("active", n === 6);
+        $("scoreboard").classList.toggle("t6", n === 6);
         buildScoreboard();
         renderScores();
         renderTurn();
@@ -1016,7 +1347,7 @@
           wrap.appendChild(sec);
         });
         var left = unplayedList().length;
-        $("leftCount").textContent = left === 0 ? "All 30 played. Dhamaka complete! 🎉" : left + " of 30 still to play";
+        $("leftCount").textContent = left === 0 ? "All " + SONGS.length + " played. Dhamaka complete! 🎉" : left + " of " + SONGS.length + " still to play";
       }
       function guessUpdateUI() {
         var num = $("guessTimeNum");
@@ -1028,11 +1359,13 @@
       function guessStopTimer() {
         if (guessTimerId) { clearInterval(guessTimerId); guessTimerId = null; }
         guessRunning = false;
+        syncTimerSound();
       }
       function guessStartTimer() {
         guessStopTimer();
         guessLeft = GUESS_SECONDS;
         guessRunning = true;
+        syncTimerSound();
         guessUpdateUI();
         guessTimerId = setInterval(function () {
           if (!guessRunning || revealed) return;
@@ -1066,6 +1399,7 @@
         revealed = false;
         $("stageIdle").hidden = true;
         $("stageGame").hidden = false;
+        var lay = $("songLayout"); if (lay) lay.classList.add("focus");
         var numInDiff = 0;
         for (var k = 0; k <= i; k++) if (SONGS[k].diff === SONGS[i].diff) numInDiff++;
         $("stageTitle").textContent = DIFFS[SONGS[i].diff].label + " #" + numInDiff + (viaShuffle ? " · 🎲 Shuffle pick!" : "");
@@ -1111,6 +1445,7 @@
       }
       function passTurn(fromTimeout) {
         if (current < 0 || revealed) return;
+        playWrongSound();
         tried[attemptIdx] = true;
         var next = -1;
         for (var k = 1; k < teamCount; k++) {
@@ -1131,10 +1466,12 @@
       }
       function correctGuess() {
         if (current < 0 || revealed) return;
+        playRightSound();
         revealSong(attemptIdx);
       }
       function revealSong(winner) {
         if (current < 0) return;
+        var lay2 = $("songLayout"); if (lay2) lay2.classList.remove("focus");
         guessStopTimer();
         revealed = true;
         var s = SONGS[current];
@@ -1159,8 +1496,8 @@
         $("answer").classList.add("show");
         $("preRevealActions").style.display = "none";
         $("guessTimer").style.display = "none";
-        $("playBtn").textContent = s.start > 0 ? "▶ Play from the clue line (1 minute)" : "▶ Play 1 minute";
-        $("ytNote").innerHTML = "Plays the official video right here" + (s.start > 0 ? ", starting at the clue line," : "") + " and stops on its own after 1 minute. If a video refuses to play in the page, " +
+        $("playBtn").textContent = s.start > 0 ? "▶ Play from the clue line (30 seconds)" : "▶ Play 30 seconds";
+        $("ytNote").innerHTML = "Plays the official video right here" + (s.start > 0 ? ", starting at the clue line," : "") + " and stops on its own after 30 seconds. If a video refuses to play in the page, " +
           '<a href="https://www.youtube.com/watch?v=' + s.vid + '" target="_blank" rel="noopener">open it on YouTube</a>.';
         renderScores();
         updateWorth();
@@ -1232,10 +1569,10 @@
           var elapsed = t - playStartedAt;
           var left = CLIP_SECONDS - elapsed;
           $("cdFill").style.width = Math.max(0, (left / CLIP_SECONDS) * 100) + "%";
-          $("cdTime").textContent = fmt(left) + " left of the 1 minute play 🎶";
+          $("cdTime").textContent = fmt(left) + " left of the 30 second play 🎶";
           if (elapsed >= CLIP_SECONDS) {
             stopPlayback();
-            $("cdTime").textContent = "That is the minute! 🎉";
+            $("cdTime").textContent = "That is the 30 seconds! 🎉";
             $("countdown").classList.add("show");
           }
         }, 250);
@@ -1353,13 +1690,282 @@
           }
         } catch (e) {}
       }
+      /* ---------- Host answers cheatsheet (all 45, collapsed by default) ---------- */
+      function buildHostAnswers() {
+        var body = $("hostAnswersBody");
+        if (!body) return;
+        body.innerHTML = "";
+        ["easy", "medium", "hard"].forEach(function (d) {
+          var group = document.createElement("div");
+          group.className = "ha-group ha-" + d;
+          var h = document.createElement("h3");
+          h.textContent = DIFFS[d].label + " · " + DIFFS[d].pts + " points";
+          group.appendChild(h);
+          var num = 0;
+          SONGS.forEach(function (s) {
+            if (s.diff !== d) return;
+            num++;
+            var row = document.createElement("div");
+            row.className = "ha-row";
+            var n = document.createElement("span");
+            n.className = "ha-num";
+            n.textContent = num;
+            var clue = document.createElement("span");
+            clue.className = "ha-clue";
+            clue.textContent = s.lines.join(" / ");
+            var ans = document.createElement("span");
+            ans.className = "ha-ans";
+            ans.textContent = s.title + " ";
+            var mv = document.createElement("span");
+            mv.textContent = "— " + s.movie + (s.year ? " (" + s.year + ")" : "");
+            ans.appendChild(mv);
+            row.appendChild(n); row.appendChild(clue); row.appendChild(ans);
+            group.appendChild(row);
+          });
+          body.appendChild(group);
+        });
+      }
+      function toggleHostAnswers() {
+        var body = $("hostAnswersBody");
+        var btn = $("hostAnswersToggle");
+        if (!body || !btn) return;
+        var opening = body.hidden;
+        body.hidden = !opening;
+        btn.textContent = opening ? "Hide answers" : "Show answers";
+        btn.setAttribute("aria-expanded", opening ? "true" : "false");
+      }
+      /* ---------- Printable host cheatsheet (print only, built from the same data) ---------- */
+      function buildPrintSheet() {
+        var sheet = $("printSheet");
+        if (!sheet) return;
+        sheet.innerHTML = "";
+        var head = document.createElement("div");
+        head.className = "ps-head";
+        var h = document.createElement("h1");
+        h.textContent = "Host cheatsheet — Guess the Song: all 45 answers";
+        var sub = document.createElement("p");
+        sub.textContent = "Shikha & Divy's Diwali Party · For the host's eyes only — find the song by its board number or English lines, then tap Correct or Wrong on the game screen.";
+        head.appendChild(h);
+        head.appendChild(sub);
+        sheet.appendChild(head);
+        var rules = document.createElement("div");
+        rules.className = "ps-rules";
+        var rp = document.createElement("p");
+        rp.innerHTML = "<b>Rules reminder:</b> Scoring — Easy <b>5</b> · Medium <b>10</b> · Hard <b>15</b>. One hint per song (the movie and year) <b>halves the points</b> (Easy 3 · Medium 5 · Hard 8). After a miss or timeout, the next team can <b>steal for half points</b>. Tie-breaker win is worth <b>15 points</b>.";
+        rules.appendChild(rp);
+        sheet.appendChild(rules);
+        ["easy", "medium", "hard"].forEach(function (d) {
+          var group = document.createElement("div");
+          group.className = "ps-group";
+          var gh = document.createElement("h2");
+          gh.textContent = DIFFS[d].label + " · " + DIFFS[d].pts + " points";
+          group.appendChild(gh);
+          var num = 0;
+          SONGS.forEach(function (s) {
+            if (s.diff !== d) return;
+            num++;
+            var row = document.createElement("div");
+            row.className = "ps-row";
+            var n = document.createElement("span");
+            n.className = "ps-num";
+            n.textContent = num;
+            var clue = document.createElement("span");
+            clue.className = "ps-clue";
+            clue.textContent = s.lines.join(" / ");
+            var ans = document.createElement("span");
+            ans.className = "ps-ans";
+            ans.textContent = s.title + " ";
+            var mv = document.createElement("span");
+            mv.textContent = "— " + s.movie + (s.year ? " (" + s.year + ")" : "");
+            ans.appendChild(mv);
+            row.appendChild(n);
+            row.appendChild(clue);
+            row.appendChild(ans);
+            group.appendChild(row);
+          });
+          sheet.appendChild(group);
+        });
+        var tie = document.createElement("div");
+        tie.className = "ps-tie";
+        var th = document.createElement("h2");
+        th.textContent = "Tie-breaker · Hard · 15 points";
+        var tc = document.createElement("p");
+        tc.textContent = "Clue lines: " + TIE_SONG.lines.join(" / ");
+        var ta = document.createElement("p");
+        ta.className = "ps-tie-ans";
+        ta.textContent = "Answer: " + TIE_SONG.title + " — " + TIE_SONG.movie + " (" + TIE_SONG.year + ")";
+        tie.appendChild(th);
+        tie.appendChild(tc);
+        tie.appendChild(ta);
+        sheet.appendChild(tie);
+      }
+      /* ---------- Tie-breaker ---------- */
+      var tieTimerId = null, tieLeft = GUESS_SECONDS, tieRunning = false, tieResolved = false, tieReplayUsed = false;
+      var tieYtPlayer = null, tieCdTimer = null, tiePlayStartedAt = 0;
+      function tieUpdateUI() {
+        var num = $("tieTimeNum");
+        if (!num) return;
+        num.textContent = Math.ceil(tieLeft);
+        num.classList.toggle("low", tieLeft <= 5.05 && tieRunning);
+        $("tieFill").style.width = Math.max(0, (tieLeft / GUESS_SECONDS) * 100) + "%";
+      }
+      function tieStopGuessTimer() {
+        if (tieTimerId) { clearInterval(tieTimerId); tieTimerId = null; }
+        tieRunning = false;
+        syncTimerSound();
+      }
+      function tieStartGuessTimer() {
+        tieStopGuessTimer();
+        tieLeft = GUESS_SECONDS;
+        tieRunning = true;
+        syncTimerSound();
+        tieUpdateUI();
+        tieTimerId = setInterval(function () {
+          if (!tieRunning || tieResolved) return;
+          tieLeft -= 0.1;
+          if (tieLeft <= 0) {
+            tieLeft = 0;
+            tieUpdateUI();
+            tieStopGuessTimer();
+            if (!tieResolved) $("tieResult").textContent = "⏰ Time's up! Replay the clip once, or call it a shared win.";
+            return;
+          }
+          tieUpdateUI();
+        }, 100);
+      }
+      function tieStopCountdown() { if (tieCdTimer) { clearInterval(tieCdTimer); tieCdTimer = null; } }
+      function tieStartCountdown() {
+        tieStopCountdown();
+        $("tieCountdown").classList.add("show");
+        tieCdTimer = setInterval(function () {
+          if (!tieYtPlayer || typeof tieYtPlayer.getCurrentTime !== "function") return;
+          var t = tieYtPlayer.getCurrentTime() || 0;
+          var elapsed = t - tiePlayStartedAt;
+          var left = CLIP_SECONDS - elapsed;
+          $("tieCdFill").style.width = Math.max(0, (left / CLIP_SECONDS) * 100) + "%";
+          $("tieCdTime").textContent = fmt(left) + " left of the 30 second play 🎶";
+          if (elapsed >= CLIP_SECONDS) {
+            tieStopPlayback();
+            $("tieCdTime").textContent = "That is the 30 seconds! 🎉";
+            $("tieCountdown").classList.add("show");
+          }
+        }, 250);
+      }
+      function tieStopPlayback() {
+        tieStopCountdown();
+        if (tieYtPlayer && typeof tieYtPlayer.stopVideo === "function") {
+          try { tieYtPlayer.stopVideo(); } catch (e) {}
+        }
+        var sb = $("tieStopBtn"), pb = $("tiePlayBtn");
+        if (sb) sb.hidden = true;
+        if (pb) pb.hidden = false;
+      }
+      function tiePlayClip() {
+        $("tiePlayerWrap").classList.add("show");
+        $("tiePlayBtn").hidden = true;
+        $("tieStopBtn").hidden = false;
+        tiePlayStartedAt = TIE_SONG.start || 0;
+        var startPlayback = function () {
+          if (tieYtPlayer) {
+            tieYtPlayer.loadVideoById({ videoId: TIE_SONG.vid, startSeconds: tiePlayStartedAt });
+          } else {
+            tieYtPlayer = new YT.Player("tiePlayer", {
+              videoId: TIE_SONG.vid,
+              playerVars: { autoplay: 1, rel: 0, playsinline: 1, start: tiePlayStartedAt },
+              events: {
+                onStateChange: function (e) {
+                  if (e.data === YT.PlayerState.PLAYING) tieStartCountdown();
+                  if (e.data === YT.PlayerState.ENDED || e.data === YT.PlayerState.PAUSED) tieStopCountdown();
+                }
+              }
+            });
+            setTimeout(function () {
+              if (tieYtPlayer && typeof tieYtPlayer.getPlayerState === "function" &&
+                  tieYtPlayer.getPlayerState() === YT.PlayerState.PLAYING) tieStartCountdown();
+            }, 1200);
+          }
+        };
+        if (ytReady && window.YT && YT.Player) {
+          startPlayback();
+        } else {
+          var tries = 0;
+          var wait = setInterval(function () {
+            tries++;
+            if (window.YT && YT.Player) { clearInterval(wait); ytReady = true; startPlayback(); }
+            if (tries > 40) clearInterval(wait);
+          }, 250);
+        }
+      }
+      function renderTieTeams() {
+        var row = $("tieTeams");
+        row.innerHTML = "";
+        TEAMS.forEach(function (t, i) {
+          if (i >= teamCount) return;
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "gold";
+          btn.textContent = "✅ Correct: " + t.name + " +" + TIE_SONG.pts;
+          btn.style.borderColor = t.color;
+          btn.disabled = tieResolved;
+          btn.addEventListener("click", function () { tieAward(i); });
+          row.appendChild(btn);
+        });
+      }
+      function tieAward(i) {
+        if (tieResolved) return;
+        playRightSound();
+        tieResolved = true;
+        tieStopGuessTimer();
+        tieStopPlayback();
+        scores[i] += TIE_SONG.pts;
+        renderScores();
+        $("tieResult").textContent = "🏆 " + TEAMS[i].name + " wins the tie-breaker: +" + TIE_SONG.pts + " points! The answer was " + TIE_SONG.title + " (" + TIE_SONG.movie + ", " + TIE_SONG.year + ").";
+        renderTieTeams();
+      }
+      function tieSharedWin() {
+        if (tieResolved) return;
+        playWrongSound();
+        tieResolved = true;
+        tieStopGuessTimer();
+        tieStopPlayback();
+        $("tieResult").textContent = "🤝 Shared win! Nobody got the tie-breaker, so the tied teams share the win. The answer was " + TIE_SONG.title + " (" + TIE_SONG.movie + ", " + TIE_SONG.year + ").";
+        renderTieTeams();
+      }
+      function openTie() {
+        tieResolved = false;
+        tieReplayUsed = false;
+        tieStopPlayback();
+        $("tiePlayerWrap").classList.remove("show");
+        $("tieCountdown").classList.remove("show");
+        $("tieResult").textContent = "";
+        $("tieAnswerNote").classList.remove("show");
+        $("tieAnswerBtn").textContent = "🔐 Show answer (host only)";
+        $("tieReplayBtn").disabled = false;
+        $("tieReplayBtn").textContent = "↺ Replay clip (once)";
+        var linesEl = $("tieLines");
+        linesEl.innerHTML = "";
+        TIE_SONG.lines.forEach(function (ln) {
+          var span = document.createElement("span");
+          span.className = "song-line";
+          span.textContent = ln;
+          linesEl.appendChild(span);
+        });
+        renderTieTeams();
+        $("tieBackdrop").classList.add("open");
+        tieStartGuessTimer();
+      }
+      function closeTie() {
+        tieStopGuessTimer();
+        tieStopPlayback();
+        $("tieBackdrop").classList.remove("open");
+      }
       document.addEventListener("DOMContentLoaded", function () {
         buildScoreboard();
         buildBoard();
         renderScores();
         renderTurn();
-        $("teams4Btn").addEventListener("click", function () { setTeamCount(4); });
         $("teams5Btn").addEventListener("click", function () { setTeamCount(5); });
+        $("teams6Btn").addEventListener("click", function () { setTeamCount(6); });
         $("fontSBtn").addEventListener("click", function () { setFontSize("s"); });
         $("fontMBtn").addEventListener("click", function () { setFontSize("m"); });
         $("fontLBtn").addEventListener("click", function () { setFontSize("l"); });
@@ -1376,10 +1982,11 @@
         $("resetBtn").addEventListener("click", function () {
           stopPlayback();
           guessStopTimer();
-          scores = [0, 0, 0, 0, 0];
+          scores = [0, 0, 0, 0, 0, 0];
           played = {}; awardedTo = {}; current = -1; hintUsed = false; revealed = false; turnIdx = 0; stealMode = false; tried = {};
           $("stageGame").hidden = true;
           $("stageIdle").hidden = false;
+          var lay3 = $("songLayout"); if (lay3) lay3.classList.remove("focus");
           renderScores(); renderBoard(); renderTurn();
         });
         $("sampleBtn").addEventListener("click", openSample);
@@ -1396,6 +2003,46 @@
           if (e.key === "Escape") closeSample();
         });
         $("fsBtn").addEventListener("click", toggleFullscreen);
+        renderSoundBtn();
+        $("soundBtn").addEventListener("click", toggleSoundsMuted);
+        buildHostAnswers();
+        $("hostAnswersToggle").addEventListener("click", toggleHostAnswers);
+        buildPrintSheet();
+        $("printCheatsheetBtn").addEventListener("click", function () { window.print(); });
+        $("tieBtn").addEventListener("click", openTie);
+        $("tieCloseBtn").addEventListener("click", closeTie);
+        $("tieBackdrop").addEventListener("click", function (e) {
+          if (e.target === $("tieBackdrop")) closeTie();
+        });
+        $("tiePlayBtn").addEventListener("click", tiePlayClip);
+        $("tieStopBtn").addEventListener("click", function () {
+          tieStopPlayback();
+          $("tieCountdown").classList.remove("show");
+        });
+        $("tieReplayBtn").addEventListener("click", function () {
+          if (tieReplayUsed || tieResolved) return;
+          tieReplayUsed = true;
+          $("tieReplayBtn").disabled = true;
+          $("tieReplayBtn").textContent = "↺ Replay used";
+          $("tieResult").textContent = "";
+          tiePlayClip();
+          tieStartGuessTimer();
+        });
+        $("tieAnswerBtn").addEventListener("click", function () {
+          var note = $("tieAnswerNote");
+          var showing = note.classList.toggle("show");
+          if (showing) {
+            note.innerHTML = "";
+            var b = document.createElement("b");
+            b.textContent = "Host answer: ";
+            note.appendChild(b);
+            note.appendChild(document.createTextNode(TIE_SONG.title + " — " + TIE_SONG.movie + " (" + TIE_SONG.year + "). Check the tied teams against this before tapping Correct."));
+            $("tieAnswerBtn").textContent = "🔐 Hide answer";
+          } else {
+            $("tieAnswerBtn").textContent = "🔐 Show answer (host only)";
+          }
+        });
+        $("tieSharedBtn").addEventListener("click", tieSharedWin);
       });
     </script>
     <script>
@@ -1425,7 +2072,12 @@
         { w: "MOHANTHAL", clue: "A rich gram flour and ghee sweet, a Gujarati Diwali staple." },
         { w: "AGARBATTI", clue: "Fragrant incense sticks lit during the puja." },
         { w: "GOVARDHAN", clue: "The day after Diwali, when Krishna lifted a whole hill to shelter his people." },
-        { w: "SHRIKHAND", clue: "A saffron flavoured sweet made from thick hung curd." }
+        { w: "SHRIKHAND", clue: "A saffron flavoured sweet made from thick hung curd." },
+        { w: "TORAN", clue: "The mango-leaf and marigold garland hung over the front doorway for luck." },
+        { w: "KANDIL", clue: "The colourful paper lantern hung outside the home at Diwali." },
+        { w: "PHULJHADI", clue: "Another name for the handheld sparkler that showers golden sparks." },
+        { w: "SONPAPDI", clue: "Flaky, melt-in-the-mouth cubes of sweet, a Diwali gift-box favourite." },
+        { w: "CHOPDA", clue: "The new account books blessed at the Diwali Chopda Pujan." }
       ];
       var activeTab = "song";
       var jTurn = 0;
