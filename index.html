@@ -545,6 +545,27 @@
       .tie-answer-note b { color: var(--gold-bright); }
       .tie-teams { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-top: 0.6rem; }
       .tie-result { text-align: center; font-weight: 800; font-size: 1.15rem; color: var(--gold-bright); min-height: 1.4em; margin: 0.9rem 0 0; }
+      .teams-overlay {
+        position: fixed; inset: 0; z-index: 60;
+        background: rgba(20, 3, 6, 0.96);
+        overflow-y: auto; padding: 24px 18px 48px;
+      }
+      .teams-overlay-inner { max-width: 900px; margin: 0 auto; }
+      .teams-overlay-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+      .teams-overlay-head h2 { font-family: "Rozha One", serif; font-weight: 400; color: var(--gold-bright); font-size: clamp(28px, 6vw, 44px); margin: 0; }
+      .teams-overlay-head button {
+        font-family: "Mukta", system-ui, sans-serif; font-size: 18px; font-weight: 800;
+        color: #22060a; background: var(--gold); border: none; border-radius: 999px;
+        padding: 12px 24px; cursor: pointer;
+      }
+      .teams-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 20px; }
+      @media (max-width: 640px) { .teams-grid { grid-template-columns: 1fr; } }
+      .all-team-card {
+        background: var(--panel); border: 2px solid var(--gold); border-left: 8px solid var(--team, var(--gold));
+        border-radius: 16px; padding: 18px; text-align: left;
+      }
+      .all-team-card h3 { font-family: "Rozha One", serif; font-weight: 400; color: var(--gold-bright); font-size: 30px; margin: 0 0 6px; }
+      .all-team-card p { font-size: 21px; line-height: 1.65; margin: 0; color: var(--cream); }
       .host-answers {
         margin: 0 1.4rem 1rem; background: rgba(61, 13, 22, 0.75);
         border: 1px solid var(--line); border-radius: 1rem; box-shadow: var(--shadow);
@@ -642,8 +663,8 @@
       <div class="controls">
         <div class="team-count" role="group" aria-label="Number of teams">
           <span>Teams</span>
-          <button id="teams5Btn" type="button" class="active">5</button>
-          <button id="teams6Btn" type="button">6</button>
+          <button id="teams5Btn" type="button">5</button>
+          <button id="teams6Btn" type="button" class="active">6</button>
         </div>
         <div class="font-count" role="group" aria-label="Text size">
           <span>Text size</span>
@@ -656,6 +677,7 @@
           <button id="shuffleEasyBtn" class="gold big" type="button">🎲 Shuffle Easy</button>
           <button id="shuffleMediumBtn" class="gold big" type="button">🎲 Shuffle Medium</button>
           <button id="shuffleHardBtn" class="gold big" type="button">🎲 Shuffle Hard</button>
+          <button id="showTeamsBtn" class="gold big" type="button">👥 Show all teams</button>
           <button id="resetBtn" type="button">↺ Reset game</button>
         </div>
         <div class="contents" id="jumbleControls" hidden>
@@ -671,6 +693,15 @@
       <button id="tabJumble" class="tab" type="button">🔤 Jumbled Words</button>
     </nav>
     <section class="scoreboard" id="scoreboard" aria-label="Team scores"></section>
+    <div id="teamsOverlay" class="teams-overlay" hidden role="dialog" aria-label="All teams">
+      <div class="teams-overlay-inner">
+        <div class="teams-overlay-head">
+          <h2>🪔 All teams — Game 1</h2>
+          <button id="closeTeamsBtn" type="button">✕ Close</button>
+        </div>
+        <div class="teams-grid" id="teamsGrid"></div>
+      </div>
+    </div>
     <section class="tie-bar" aria-label="Tie-breaker">
       <p>🤝 <b>Tied at the top?</b> Play one quick hard song as the decider — first tied team to shout it wins.</p>
       <button id="tieBtn" class="gold" type="button">⚡ Tie-breaker</button>
@@ -920,7 +951,7 @@
         <div class="sample-step" data-jstep="5">
           <h3><span class="step-no">5 of 5</span>The word ticks off, the turn passes</h3>
           <p>Either way, the word is now <b>ticked off</b> on the board, it cannot be played again, and the turn moves to the <b>next team</b> and their words:</p>
-          <div class="mini-turn"><span class="turn-chip">🎯 Next turn: Team Mohanthal</span></div>
+          <div class="mini-turn"><span class="turn-chip">🎯 Next turn: Team Rasgulla</span></div>
           <p>Keep going until every word on the board is ticked off. The team with the most points wins the dhamaka! 🏆</p>
         </div>
         <div class="sample-nav">
@@ -991,7 +1022,7 @@
             <div class="mini-tile played">7</div><div class="mini-tile">8</div><div class="mini-tile">9</div>
             <div class="mini-tile">10</div><div class="mini-tile">11</div><div class="mini-tile">12</div>
           </div>
-          <div class="mini-turn"><span class="turn-chip">🎯 Next turn: Team Mohanthal</span></div>
+          <div class="mini-turn"><span class="turn-chip">🎯 Next turn: Team Rasgulla</span></div>
           <p>That is one full round! Keep going until all 45 numbers are gone. The team with the most points wins the dhamaka. 🏆</p>
         </div>
         <div class="sample-nav">
@@ -1069,10 +1100,22 @@
       var TEAMS = [
         { name: "Team Kaju Katli", color: "#ff5d7e" },
         { name: "Team Jalebi", color: "#ff8c42" },
-        { name: "Team Mohanthal", color: "#ffd23e" },
+        { name: "Team Rasgulla", color: "#ffd23e" },
         { name: "Team Barfi", color: "#7fd08c" },
         { name: "Team Ladoo", color: "#5db3ff" },
-        { name: "Team Modak", color: "#c77dff" }
+        { name: "Team Gulab Jamun", color: "#c77dff" }
+      ];
+      /* Game-1 rosters (final, set by Shikha Nov 18 + Arjun/Avanthi Nov 21) —
+         same order as TEAMS above, so the "Show all teams" panel lines up
+         with the scoreboard even if a team name is edited.
+         Jigar (Janal's partner) and Jiger (Dhara's partner) are different people. */
+      var ROSTERS = [
+        ["Jigar (Janal's partner)", "Janal's mom", "Neel", "Neha", "Radhika"],
+        ["Janal", "Janal's dad", "Naisargi", "Swara"],
+        ["Harsh", "Tapan", "Pankaj", "Krinal", "Avanthi"],
+        ["Dipti", "Kush", "Yash", "Jyothsna", "Arjun"],
+        ["Bhavik", "Hemangini", "Varun", "Jiger (Dhara's partner)", "Mitwa"],
+        ["Dhara", "Rushil", "Mrugesh", "Meet", "Mayank"]
       ];
       var CLIP_SECONDS = 30;
       var GUESS_SECONDS = 30;
@@ -1086,7 +1129,7 @@
       var stealMode = false;
       var hintUsed = false;
       var revealed = false;
-      var teamCount = 5;
+      var teamCount = 6;
       var turnIdx = 0;
       var guessTimerId = null, guessLeft = GUESS_SECONDS, guessRunning = false;
       var guessPaused = false;
@@ -1269,6 +1312,24 @@
           sb.appendChild(card);
         });
       }
+      function buildTeamsOverlay() {
+        var grid = $("teamsGrid");
+        grid.innerHTML = "";
+        for (var i = 0; i < teamCount; i++) {
+          var card = document.createElement("div");
+          card.className = "all-team-card";
+          card.style.setProperty("--team", TEAMS[i].color);
+          var h = document.createElement("h3");
+          h.textContent = TEAMS[i].name;
+          var p = document.createElement("p");
+          p.innerHTML = ROSTERS[i].map(function (n) { return "<b>" + n + "</b>"; }).join(" · ");
+          card.appendChild(h); card.appendChild(p);
+          grid.appendChild(card);
+        }
+      }
+      $("showTeamsBtn").addEventListener("click", function () { buildTeamsOverlay(); $("teamsOverlay").hidden = false; });
+      $("closeTeamsBtn").addEventListener("click", function () { $("teamsOverlay").hidden = true; });
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape") $("teamsOverlay").hidden = true; });
       function renderScores() {
         for (var i = 0; i < TEAMS.length; i++) {
           var el = $("score-" + i);
@@ -1980,7 +2041,7 @@
         $("tieBackdrop").classList.remove("open");
       }
       document.addEventListener("DOMContentLoaded", function () {
-        buildScoreboard();
+        setTeamCount(6);
         buildBoard();
         renderScores();
         renderTurn();
@@ -2346,6 +2407,7 @@
         $("tabSong").classList.toggle("active", name === "song");
         $("tabJumble").classList.toggle("active", name === "jumble");
         $("songView").hidden = name !== "song";
+        $("teamsOverlay").hidden = true;
         $("jumbleView").hidden = name !== "jumble";
         $("songControls").hidden = name !== "song";
         $("jumbleControls").hidden = name !== "jumble";
