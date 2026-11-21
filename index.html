@@ -714,6 +714,7 @@
             <button id="correctBtn" class="gold" type="button">✅ Correct!</button>
             <button id="missBtn" type="button">😬 Missed: pass to next team</button>
             <button id="revealBtn" type="button">🎉 Reveal the song</button>
+            <button id="pauseBtn" type="button">⏸ Pause</button>
           </div>
           <div class="answer" id="answer">
             <p class="song" id="ansSong"></p>
@@ -748,6 +749,7 @@
         <li><b>💡 The one hint</b> (movie + year) can be used <b>once per song</b>. It <b>halves the points</b>, rounded up — Easy 5 → <b>3</b>, Medium 10 → <b>5</b>, Hard 15 → <b>8</b> — for whichever team ends up answering, including on a steal.</li>
         <li><span class="cs-pink">🚨 Steal:</span> after a miss or timeout, the <b>next team</b> gets the same lines with a <b>fresh 30 seconds</b> and can steal for <b>half points</b> (Easy 3, Medium 5, Hard 8). If every team misses, tap <b>🎉 Reveal the song</b> — nobody scores, the number ticks off grey with a ✓, and the turn passes to the next team. A correct answer gets a 👏 clap, and every miss gets a short <b>1-second wrong-answer sting</b> — never the full clip.</li>
         <li><b>🎉 Reveal the song</b> ends the round: the answer shows, then <b>▶ Play</b> runs the video from the clue line for <b>30 seconds</b> max. Played numbers stay greyed out and can't be picked again.</li>
+        <li><b>⏸ Pause</b> freezes the 30-second timer (and the ticking) — tap <b>▶ Resume</b> to carry on from the same second.</li>
       </ul>
     </section>
     <section class="host-answers" aria-label="Host answers cheatsheet">
@@ -1087,6 +1089,7 @@
       var teamCount = 5;
       var turnIdx = 0;
       var guessTimerId = null, guessLeft = GUESS_SECONDS, guessRunning = false;
+      var guessPaused = false;
       function $(id) { return document.getElementById(id); }
       /* ---------- Correct / wrong answer sounds (local MP3s in sounds/) ----------
          Played instantly on the host's taps: Correct always plays the same
@@ -1185,7 +1188,7 @@
       function syncTimerSound() {
         try {
           var tieOn = (typeof tieRunning !== "undefined" && tieRunning);
-          var want = !soundsMuted && (guessRunning || tieOn);
+          var want = !soundsMuted && ((guessRunning && !guessPaused) || tieOn);
           if (want) {
             var a = getTimerAudio();
             a.loop = true;
@@ -1367,10 +1370,13 @@
         guessStopTimer();
         guessLeft = GUESS_SECONDS;
         guessRunning = true;
+        guessPaused = false;
+        var pb = $("pauseBtn");
+        if (pb) pb.textContent = "⏸ Pause";
         syncTimerSound();
         guessUpdateUI();
         guessTimerId = setInterval(function () {
-          if (!guessRunning || revealed) return;
+          if (!guessRunning || revealed || guessPaused) return;
           guessLeft -= 0.1;
           if (guessLeft <= 0) {
             guessLeft = 0;
@@ -1444,6 +1450,14 @@
         $("hintBtn").disabled = true;
         $("hintBtn").textContent = "💡 Hint used. Points are now " + pointsNow();
         updateWorth();
+      }
+      /* ⏸ Pause freezes the 30-second guess timer (and the ticking) so the
+         host can hold the room; ▶ Resume carries on from the same second. */
+      function toggleGuessPause() {
+        if (current < 0 || revealed || !guessRunning) return;
+        guessPaused = !guessPaused;
+        $("pauseBtn").textContent = guessPaused ? "▶ Resume" : "⏸ Pause";
+        syncTimerSound();
       }
       function passTurn(fromTimeout) {
         if (current < 0 || revealed) return;
@@ -1979,6 +1993,7 @@
         $("correctBtn").addEventListener("click", correctGuess);
         $("missBtn").addEventListener("click", function () { guessStopTimer(); passTurn(false); });
         $("revealBtn").addEventListener("click", revealManual);
+        $("pauseBtn").addEventListener("click", toggleGuessPause);
         $("playBtn").addEventListener("click", playCurrent);
         $("stopBtn").addEventListener("click", function () {
           stopPlayback();
