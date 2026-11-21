@@ -746,7 +746,7 @@
         <li><span class="cs-gold">✅ Tap Correct</span> when the team on turn <b>names the song</b> (title, or the famous hook line sung back) before the 30 seconds run out. The song is revealed and that team gets the points shown on the badge.</li>
         <li><b>😬 Tap Missed / Wrong</b> when the team gives a <b>wrong song</b>, says they don't know, or the <b>timer runs out</b> (timeout passes automatically). Don't reveal yet — the song moves on as a steal.</li>
         <li><b>💡 The one hint</b> (movie + year) can be used <b>once per song</b>. It <b>halves the points</b>, rounded up — Easy 5 → <b>3</b>, Medium 10 → <b>5</b>, Hard 15 → <b>8</b> — for whichever team ends up answering, including on a steal.</li>
-        <li><span class="cs-pink">🚨 Steal:</span> after a miss or timeout, the <b>next team</b> gets the same lines with a <b>fresh 30 seconds</b> and can steal for <b>half points</b> (Easy 3, Medium 5, Hard 8). If every team misses, tap <b>🎉 Reveal the song</b> — nobody scores, the number ticks off grey with a ✓, and the turn passes to the next team. The funny missed sound plays <b>once only, when no team gets the song</b> — never in between teams.</li>
+        <li><span class="cs-pink">🚨 Steal:</span> after a miss or timeout, the <b>next team</b> gets the same lines with a <b>fresh 30 seconds</b> and can steal for <b>half points</b> (Easy 3, Medium 5, Hard 8). If every team misses, tap <b>🎉 Reveal the song</b> — nobody scores, the number ticks off grey with a ✓, and the turn passes to the next team. A correct answer gets a 👏 clap, and every miss gets a short <b>1-second wrong-answer sting</b> — never the full clip.</li>
         <li><b>🎉 Reveal the song</b> ends the round: the answer shows, then <b>▶ Play</b> runs the video from the clue line for <b>30 seconds</b> max. Played numbers stay greyed out and can't be picked again.</li>
       </ul>
     </section>
@@ -1088,22 +1088,15 @@
       var turnIdx = 0;
       var guessTimerId = null, guessLeft = GUESS_SECONDS, guessRunning = false;
       function $(id) { return document.getElementById(id); }
-      /* ---------- Funny right / wrong answer sounds (local MP3s in sounds/) ----------
-         Played instantly on the host's taps: Correct plays one right sound at
-         random, and Missed (pass to next team) plays one wrong sound at random —
-         there is no separate Wrong button; Missed is the wrong-answer tap, and a
-         timeout passes the turn the same way. Files sit in a sounds/ folder next
-         to index.html and are preloaded so there is no delay on the tap. */
-      var RIGHT_SOUNDS = [
-        "sounds/right-all-is-well.mp3",
-        "sounds/right-mogambo.mp3",
-        "sounds/right-chak-de.mp3",
-        "sounds/right-dil-garden.mp3",
-        "sounds/right-air-horn.mp3",
-        "sounds/right-tada.mp3",
-        "sounds/right-mauj-kar-di.mp3",
-        "sounds/right-sahi-pakde-hain.mp3"
-      ];
+      /* ---------- Correct / wrong answer sounds (local MP3s in sounds/) ----------
+         Played instantly on the host's taps: Correct always plays the same
+         normal clap, and Missed (pass to next team) plays just the first
+         1 second of one wrong sound at random — a short sting, never the
+         full clip. There is no separate Wrong button; Missed is the
+         wrong-answer tap, and a timeout passes the turn the same way.
+         Files sit in a sounds/ folder next to index.html and are preloaded
+         so there is no delay on the tap. */
+      var CLAP_SOUND = "sounds/right-clap.mp3";
       var WRONG_SOUNDS = [
         "sounds/wrong-tumse-na-ho-payega.mp3",
         "sounds/wrong-dukh.mp3",
@@ -1113,7 +1106,6 @@
         "sounds/wrong-hey-maa-mataji.mp3",
         "sounds/wrong-aata-majhi-satakli.mp3"
       ];
-      var AIR_HORN_SRC = "sounds/right-air-horn.mp3";
       var soundsMuted = false;
       var soundCache = {};
       var liveSounds = [];
@@ -1127,32 +1119,40 @@
         return a;
       }
       function preloadSounds() {
-        RIGHT_SOUNDS.concat(WRONG_SOUNDS).forEach(cacheSound);
+        [CLAP_SOUND].concat(WRONG_SOUNDS).forEach(cacheSound);
         try { getTimerAudio().load(); } catch (e) {}
       }
-      function playSoundFile(src) {
+      function playSoundFile(src, stopAfterMs) {
         if (soundsMuted) return;
         try {
           var base = cacheSound(src);
           /* Clone the preloaded element so sounds can overlap and never block the game. */
           var a = base.cloneNode ? base.cloneNode() : new Audio(src);
           a.preload = "auto";
-          /* The air horn is a loud distorted clip, so it plays quieter than the rest. */
-          a.volume = src === AIR_HORN_SRC ? 0.35 : 1;
+          a.volume = 1;
           liveSounds.push(a);
-          a.addEventListener("ended", function () {
+          var done = false;
+          var finish = function () {
+            if (done) return;
+            done = true;
             var ix = liveSounds.indexOf(a);
             if (ix >= 0) liveSounds.splice(ix, 1);
-          });
+          };
+          a.addEventListener("ended", finish);
           var p = a.play();
           if (p && typeof p.catch === "function") p.catch(function () {});
+          if (stopAfterMs) {
+            setTimeout(function () { try { a.pause(); } catch (e) {} finish(); }, stopAfterMs);
+          }
         } catch (e) {}
       }
       function playRightSound() {
-        playSoundFile(RIGHT_SOUNDS[Math.floor(Math.random() * RIGHT_SOUNDS.length)]);
+        /* Every correct answer / points given: just the normal clap. */
+        playSoundFile(CLAP_SOUND);
       }
       function playWrongSound() {
-        playSoundFile(WRONG_SOUNDS[Math.floor(Math.random() * WRONG_SOUNDS.length)]);
+        /* Every miss: only the first second of one wrong sound at random. */
+        playSoundFile(WRONG_SOUNDS[Math.floor(Math.random() * WRONG_SOUNDS.length)], 1000);
       }
       function stopAllSounds() {
         liveSounds.forEach(function (a) { try { a.pause(); } catch (e) {} });
@@ -1447,6 +1447,8 @@
       }
       function passTurn(fromTimeout) {
         if (current < 0 || revealed) return;
+        // Short 1-second missed sting on every miss, then pass to the next team.
+        playWrongSound();
         tried[attemptIdx] = true;
         var next = -1;
         for (var k = 1; k < teamCount; k++) {
@@ -1454,8 +1456,6 @@
           if (!tried[cand]) { next = cand; break; }
         }
         if (next < 0) {
-          // Nobody got it: play the missed sound once, then reveal with no points.
-          playWrongSound();
           revealSong(-2);
           return;
         }
