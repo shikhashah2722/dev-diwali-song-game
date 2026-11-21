@@ -653,7 +653,9 @@
         </div>
         <div class="contents" id="songControls">
           <button id="sampleBtn" class="gold big" type="button">🪔 How to play: sample round</button>
-          <button id="shuffleBtn" class="gold big" type="button">🎲 Shuffle: pick for us!</button>
+          <button id="shuffleEasyBtn" class="gold big" type="button">🎲 Shuffle Easy</button>
+          <button id="shuffleMediumBtn" class="gold big" type="button">🎲 Shuffle Medium</button>
+          <button id="shuffleHardBtn" class="gold big" type="button">🎲 Shuffle Hard</button>
           <button id="resetBtn" type="button">↺ Reset game</button>
         </div>
         <div class="contents" id="jumbleControls" hidden>
@@ -686,7 +688,7 @@
         <div id="stageIdle" class="idle">
           <div class="big-diya" aria-hidden="true">🪔🎶🪔</div>
           <h3>How to play</h3>
-          <p>Pick a number from Easy, Medium or Hard, or hit <b>Shuffle</b>. Three famous lines from a song appear here, big enough for the whole room, translated into plain English.</p>
+          <p>Pick a number from Easy, Medium or Hard, or hit <b>Shuffle Easy, Medium or Hard</b>. Three famous lines from a song appear here, big enough for the whole room, translated into plain English.</p>
           <p>Read all the lines together and think of how they go in the <b>original language</b>. Teams take turns in order. The team on turn, glowing on the scoreboard, guesses first.</p>
           <p>Scoring: <b>Easy 5 points, Medium 10 points, Hard 15 points</b>. Each song has <b>one hint</b> (the movie and year). Using it <b>halves the points</b>, rounded up: Easy 3, Medium 5, Hard 8. Every guess has a <b>30 second timer</b>. If a team misses or time runs out, the turn passes to the <b>next team</b>, who can steal for half points with a fresh 30 seconds. Once a song is revealed, its number is <b>ticked off and greyed out</b> on the board, so it can't be picked again. After the reveal, the song plays from the clue line for 30 seconds.</p>
         </div>
@@ -744,7 +746,7 @@
         <li><span class="cs-gold">✅ Tap Correct</span> when the team on turn <b>names the song</b> (title, or the famous hook line sung back) before the 30 seconds run out. The song is revealed and that team gets the points shown on the badge.</li>
         <li><b>😬 Tap Missed / Wrong</b> when the team gives a <b>wrong song</b>, says they don't know, or the <b>timer runs out</b> (timeout passes automatically). Don't reveal yet — the song moves on as a steal.</li>
         <li><b>💡 The one hint</b> (movie + year) can be used <b>once per song</b>. It <b>halves the points</b>, rounded up — Easy 5 → <b>3</b>, Medium 10 → <b>5</b>, Hard 15 → <b>8</b> — for whichever team ends up answering, including on a steal.</li>
-        <li><span class="cs-pink">🚨 Steal:</span> after a miss or timeout, the <b>next team</b> gets the same lines with a <b>fresh 30 seconds</b> and can steal for <b>half points</b> (Easy 3, Medium 5, Hard 8). If every team misses, tap <b>🎉 Reveal the song</b> — nobody scores, the number ticks off grey with a ✓, and the turn passes to the next team.</li>
+        <li><span class="cs-pink">🚨 Steal:</span> after a miss or timeout, the <b>next team</b> gets the same lines with a <b>fresh 30 seconds</b> and can steal for <b>half points</b> (Easy 3, Medium 5, Hard 8). If every team misses, tap <b>🎉 Reveal the song</b> — nobody scores, the number ticks off grey with a ✓, and the turn passes to the next team. The funny missed sound plays <b>once only, when no team gets the song</b> — never in between teams.</li>
         <li><b>🎉 Reveal the song</b> ends the round: the answer shows, then <b>▶ Play</b> runs the video from the clue line for <b>30 seconds</b> max. Played numbers stay greyed out and can't be picked again.</li>
       </ul>
     </section>
@@ -938,7 +940,7 @@
         </div>
         <div class="sample-step" data-step="1">
           <h3><span class="step-no">1 of 6</span>A team picks a section and a number</h3>
-          <p>The team whose turn it is, glowing on the scoreboard with an “ON TURN” tag, picks a number from <b>Easy (5 points)</b>, <b>Medium (10 points)</b> or <b>Hard (15 points)</b>, or the host hits <b>🎲 Shuffle</b>. Say Team Jalebi picks <b>Easy number 7</b>:</p>
+          <p>The team whose turn it is, glowing on the scoreboard with an “ON TURN” tag, picks a number from <b>Easy (5 points)</b>, <b>Medium (10 points)</b> or <b>Hard (15 points)</b>, or the host hits <b>🎲 Shuffle Easy / Medium / Hard</b>. Say Team Jalebi picks <b>Easy number 7</b>:</p>
           <div class="mini-board" aria-hidden="true">
             <div class="mini-tile">1</div><div class="mini-tile">2</div><div class="mini-tile">3</div>
             <div class="mini-tile">4</div><div class="mini-tile">5</div><div class="mini-tile">6</div>
@@ -1445,7 +1447,6 @@
       }
       function passTurn(fromTimeout) {
         if (current < 0 || revealed) return;
-        playWrongSound();
         tried[attemptIdx] = true;
         var next = -1;
         for (var k = 1; k < teamCount; k++) {
@@ -1453,6 +1454,8 @@
           if (!tried[cand]) { next = cand; break; }
         }
         if (next < 0) {
+          // Nobody got it: play the missed sound once, then reveal with no points.
+          playWrongSound();
           revealSong(-2);
           return;
         }
@@ -1626,9 +1629,12 @@
         }
       }
       var shuffling = false;
-      function shufflePick() {
+      /* Shuffle only within the chosen difficulty level: the pool is the
+         unplayed songs of that level, and the flashing tiles are only from
+         that level's section of the board. */
+      function shufflePick(diff) {
         if (shuffling) return;
-        var pool = unplayedList().filter(function (i) { return i !== current; });
+        var pool = unplayedList().filter(function (i) { return i !== current && SONGS[i].diff === diff; });
         if (pool.length === 0) return;
         var target = pool[Math.floor(Math.random() * pool.length)];
         shuffling = true;
@@ -1638,7 +1644,7 @@
         var iv = setInterval(function () {
           var tiles = document.querySelectorAll(".tile.flash");
           for (var k = 0; k < tiles.length; k++) tiles[k].classList.remove("flash");
-          var avail = document.querySelectorAll(".tile:not(.played):not(.current)");
+          var avail = document.querySelectorAll(".diff-" + diff + " .tile:not(.played):not(.current)");
           if (avail.length) avail[Math.floor(Math.random() * avail.length)].classList.add("flash");
           flashes++;
           if (flashes >= 14) {
@@ -1978,7 +1984,9 @@
           stopPlayback();
           $("countdown").classList.remove("show");
         });
-        $("shuffleBtn").addEventListener("click", shufflePick);
+        $("shuffleEasyBtn").addEventListener("click", function () { shufflePick("easy"); });
+        $("shuffleMediumBtn").addEventListener("click", function () { shufflePick("medium"); });
+        $("shuffleHardBtn").addEventListener("click", function () { shufflePick("hard"); });
         $("resetBtn").addEventListener("click", function () {
           stopPlayback();
           guessStopTimer();

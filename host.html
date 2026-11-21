@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>Host cheatsheet — Shikha &amp; Divy's Diwali Party</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Mukta:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #22060a; --bg2: #35090f; --panel: #3d0d16; --panel2: #4a1220;
+        --gold: #e9b949; --gold-bright: #ffd970; --cream: #fdf3d8; --cream-dim: #d9c9a3;
+        --marigold: #ff8c42; --pink: #ff5d7e; --line: rgba(233, 185, 73, 0.35);
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; font-family: "Mukta", system-ui, sans-serif; color: var(--cream);
+        background: linear-gradient(180deg, var(--bg2), var(--bg)); min-height: 100vh; }
+      .wrap { max-width: 860px; margin: 0 auto; padding: 22px 18px 60px; }
+      h1 { font-family: "Rozha One", serif; color: var(--gold-bright); font-size: clamp(28px, 6vw, 40px); margin: 6px 0 2px; line-height: 1.15; }
+      .sub { color: var(--cream-dim); font-size: 17px; margin: 0 0 4px; }
+      .eyes { color: var(--pink); font-weight: 800; font-size: 15px; letter-spacing: 0.04em; }
+      .topbar { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0 6px; }
+      a.btn, button.btn { font-family: "Mukta", system-ui, sans-serif; font-size: 16px; font-weight: 800;
+        color: #22060a; background: var(--gold); border: none; border-radius: 999px; padding: 10px 20px;
+        cursor: pointer; text-decoration: none; display: inline-block; }
+      a.btn.ghost, button.btn.ghost { color: var(--cream-dim); background: transparent; border: 1px solid var(--line); }
+      .rules { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px 18px; margin: 14px 0 22px; font-size: 16.5px; line-height: 1.6; color: var(--cream-dim); }
+      .rules b { color: var(--cream); }
+      .rules .gold { color: var(--gold-bright); font-weight: 800; }
+      .group { margin-bottom: 26px; }
+      .group h2 { font-family: "Rozha One", serif; color: var(--gold-bright); font-size: 24px; margin: 0 0 10px; }
+      .group-medium h2 { color: var(--marigold); }
+      .group-hard h2 { color: var(--pink); }
+      .row { display: flex; gap: 12px; align-items: baseline; background: var(--panel); border: 1px solid var(--line);
+        border-radius: 10px; padding: 10px 14px; margin-bottom: 8px; font-size: 16.5px; line-height: 1.45; }
+      .num { flex: 0 0 26px; font-weight: 800; color: var(--gold-bright); text-align: center; }
+      .clue { flex: 1 1 46%; color: var(--cream-dim); }
+      .ans { flex: 1 1 46%; font-weight: 700; }
+      .ans i { font-weight: 400; color: var(--cream-dim); font-style: normal; }
+      .tie { border: 2px solid var(--gold); }
+      .tie h2 { color: var(--gold-bright); }
+      .foot { margin-top: 30px; font-size: 14px; color: var(--cream-dim); text-align: center; }
+      @media (max-width: 640px) { .row { flex-wrap: wrap; } .clue, .ans { flex-basis: 100%; } }
+      @media print {
+        body { background: #fff; color: #111; }
+        .topbar, .foot { display: none; }
+        .wrap { max-width: none; padding: 0; }
+        h1 { color: #111; font-size: 22px; }
+        .sub, .eyes, .clue, .ans i { color: #444; }
+        .rules { border-color: #999; color: #222; background: none; }
+        .row { border-color: #bbb; background: none; break-inside: avoid; }
+        .num { color: #111; }
+        .group h2 { color: #111; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>🔐 Host cheatsheet — Guess the Song</h1>
+      <p class="sub">Shikha &amp; Divy's Diwali Party · All 45 answers</p>
+      <p class="eyes">FOR THE HOST'S EYES ONLY — don't show this screen to the room.</p>
+      <div class="topbar">
+        <a class="btn" href="./index.html">▶ Open the game</a>
+        <button class="btn ghost" type="button" onclick="window.print()">🖨 Print cheatsheet</button>
+      </div>
+      <div class="rules">
+        <b>Rules reminder:</b> Scoring — Easy <b>5</b> · Medium <b>10</b> · Hard <b>15</b>. One hint per song (movie + year) <b>halves the points</b> (Easy 3 · Medium 5 · Hard 8). After a miss or timeout, the next team can <b>steal for half points</b>. <span class="gold">The funny missed sound plays once only, when no team gets the song — never in between teams.</span> Tie-breaker win is worth <b>15 points</b>. Find a song by its board number or English lines, then tap Correct or Missed on the game screen.
+      </div>
+      <section class="group group-easy">
+        <h2>Easy · 5 points</h2>
+        <div class="row"><span class="num">1</span><span class="clue">Hey, that girl keeps winking at me / She winks and winks, that girl winks at me / She whistles and gestures, she is calling me over</span><span class="ans">Aankh Marey <i>— Simmba (2018)</i></span></div>
+        <div class="row"><span class="num">2</span><span class="clue">Come, walk in the shade with me / Walk in the shade, walk in the shade, come walk with me / Whoever has the shade of love over his head will find heaven beneath his feet</span><span class="ans">Chaiyya Chaiyya <i>— Dil Se (1998)</i></span></div>
+        <div class="row"><span class="num">3</span><span class="clue">Drop by drop, the water rains down / That water has set everything on fire / When my heart caught fire, it remembered only you</span><span class="ans">Tip Tip Barsa Paani <i>— Mohra (1994)</i></span></div>
+        <div class="row"><span class="num">4</span><span class="clue">Fly away, pigeon, fly away! / Take the first letter of my first love to my beloved / Fly away, pigeon, deliver my love letter for me</span><span class="ans">Kabootar Ja Ja Ja <i>— Maine Pyar Kiya (1989)</i></span></div>
+        <div class="row"><span class="num">5</span><span class="clue">Let there be an auspicious beginning / The auspicious hour has arrived / On the threshold of dreams, my heart woke up with joy</span><span class="ans">Shubhaarambh <i>— Kai Po Che! (2013)</i></span></div>
+        <div class="row"><span class="num">6</span><span class="clue">It is you, you, and only you / Now it is only you, my life is only you / My peace and my pain, my whole love is only you</span><span class="ans">Tum Hi Ho <i>— Aashiqui 2 (2013)</i></span></div>
+        <div class="row"><span class="num">7</span><span class="clue">Oh, that kohl, those black, black eyes of yours / Oh, that kohl, oh that kohl in your black, black eyes / Those eyes have stolen the peace of my heart</span><span class="ans">Kajra Re <i>— Bunty Aur Babli (2005)</i></span></div>
+        <div class="row"><span class="num">8</span><span class="clue">Keep your henna applied and ready / Keep the bridal carriage decorated and ready / Your beloved will come to take you away, fair one</span><span class="ans">Mehndi Laga Ke Rakhna <i>— Dilwale Dulhania Le Jayenge (1995)</i></span></div>
+        <div class="row"><span class="num">9</span><span class="clue">Your love is the colour of saffron, my beloved / If I touch it, I take on its colour / My whole day passes thinking only of you</span><span class="ans">Kesariya <i>— Brahmastra (2022)</i></span></div>
+        <div class="row"><span class="num">10</span><span class="clue">They say that in this world, God made someone for everyone / a person for every single person / and meeting you is a sign from God</span><span class="ans">Raabta <i>— Agent Vinod (2012)</i></span></div>
+        <div class="row"><span class="num">11</span><span class="clue">She's on the dance floor / All eyes turn to watch her / Light up the night, steal the show</span><span class="ans">Radha <i>— Student of the Year (2012)</i></span></div>
+        <div class="row"><span class="num">12</span><span class="clue">She's the talk of the town / Everyone knows her name / She did it all for you, darling</span><span class="ans">Munni Badnaam Hui <i>— Dabangg (2010)</i></span></div>
+        <div class="row"><span class="num">13</span><span class="clue">Today's the day, today is the promise / Look, I've arrived, now you come quickly too / Don't keep me waiting any longer</span><span class="ans">Jumma Chumma De De <i>— Hum (1991)</i></span></div>
+        <div class="row"><span class="num">14</span><span class="clue">Move your feet to the rhythm / The whole town is watching you / Come on, show them your moves</span><span class="ans">Ek Do Teen <i>— Tezaab (1988)</i></span></div>
+        <div class="row"><span class="num">15</span><span class="clue">The evening is falling / The light is fading away / Hold me close tonight</span><span class="ans">Suraj Hua Maddham <i>— Kabhi Khushi Kabhie Gham (2001)</i></span></div>
+      </section>
+      <section class="group group-medium">
+        <h2>Medium · 10 points</h2>
+        <div class="row"><span class="num">1</span><span class="clue">An innocent face, mischief in her eyes / Standing far away, she blushes shyly / Now and then she shows a glimpse, then hides away</span><span class="ans">Bholi Si Surat <i>— Dil To Pagal Hai (1997)</i></span></div>
+        <div class="row"><span class="num">2</span><span class="clue">Drummer, let your drum beat! / Beat it, beat it, boom, boom, let the drum thunder! / Oh drummer, your beating drum calls us all to dance</span><span class="ans">Dholi Taro Dhol Baje <i>— Hum Dil De Chuke Sanam (1999)</i></span></div>
+        <div class="row"><span class="num">3</span><span class="clue">A first high, a first sweet daze / This is a new love, a new waiting / Tell me, what should I do with this restless heart?</span><span class="ans">Pehla Nasha <i>— Jo Jeeta Wohi Sikandar (1992)</i></span></div>
+        <div class="row"><span class="num">4</span><span class="clue">Whether my eyes are open or shut, I still see her face / How can I explain it, my friend? / How does this thing called love happen?</span><span class="ans">Aankhein Khuli <i>— Mohabbatein (2000)</i></span></div>
+        <div class="row"><span class="num">5</span><span class="clue">My dancing bells have broken / My dancing bells have broken from dancing so much / Keep dancing, keep swaying, even if the bells break</span><span class="ans">Ghungroo <i>— War (2019)</i></span></div>
+        <div class="row"><span class="num">6</span><span class="clue">This ill-mannered heart just won't listen / This ill-mannered heart just won't listen, won't listen at all / Whatever I say, this stubborn heart does its own thing</span><span class="ans">Badtameez Dil <i>— Yeh Jawaani Hai Deewani (2013)</i></span></div>
+        <div class="row"><span class="num">7</span><span class="clue">Let's sit together and talk heart to heart / Sitting side by side, we will share heart-to-heart talks / Looking eye to eye as we talk from the heart</span><span class="ans">Dil Diyan Gallan <i>— Tiger Zinda Hai (2017)</i></span></div>
+        <div class="row"><span class="num">8</span><span class="clue">My scarf keeps flying and flying in the air / Every pair of eyes keeps turning to look / Something strange stirs inside my chest</span><span class="ans">Odhani <i>— Made in China (2019)</i></span></div>
+        <div class="row"><span class="num">9</span><span class="clue">Let the eyes meet, let the lightning strike / I'll tie on my dancing bells, I'll wear my anklets / I'll dance swaying, I'll dance spinning</span><span class="ans">Dola Re Dola <i>— Devdas (2002)</i></span></div>
+        <div class="row"><span class="num">10</span><span class="clue">I keep talking only about you / your meetings often come to mind / winning your love is my madness</span><span class="ans">Jhalak Dikhla Ja <i>— Aksar (2006)</i></span></div>
+        <div class="row"><span class="num">11</span><span class="clue">Oh traveller, tell me / Where does the heart find peace / Show me the way, I'm searching</span><span class="ans">Kabira <i>— Yeh Jawaani Hai Deewani (2013)</i></span></div>
+        <div class="row"><span class="num">12</span><span class="clue">My love, my dearest / You're the one I want / Come to me, my love</span><span class="ans">Laila O Laila <i>— Qurbani (1980)</i></span></div>
+        <div class="row"><span class="num">13</span><span class="clue">Since you arrived / Everything has changed / My life is brand new</span><span class="ans">Aaye Ho Meri Zindagi Mein <i>— Raja Hindustani (1996)</i></span></div>
+        <div class="row"><span class="num">14</span><span class="clue">Those eyes of yours / They haunt me day and night / I can't look away</span><span class="ans">Yeh Kaali Kaali Aankhen <i>— Baazigar (1993)</i></span></div>
+        <div class="row"><span class="num">15</span><span class="clue">I'm no hero, that's for sure / But my heart is true / Call me what you will</span><span class="ans">Nayak Nahi Khalnayak <i>— Khalnayak (1993)</i></span></div>
+      </section>
+      <section class="group group-hard">
+        <h2>Hard · 15 points</h2>
+        <div class="row"><span class="num">1</span><span class="clue">O my star, oh my charming star / Oh my colourful star, oh my shining star / Your anklets chime and the whole ground lights up</span><span class="ans">Chogada <i>— Loveyatri (2018)</i></span></div>
+        <div class="row"><span class="num">2</span><span class="clue">Steady yourself, my heart, just a little / You are setting out to fall in love again / Sit here a moment and understand where you have come</span><span class="ans">Dil Sambhal Ja Zara <i>— Murder 2 (2011)</i></span></div>
+        <div class="row"><span class="num">3</span><span class="clue">That waist of hers twists and sways / Her waist twists, oh, her waist sways and twists / When she dances, that waist twists and turns</span><span class="ans">Kamariya <i>— Mitron (2018)</i></span></div>
+        <div class="row"><span class="num">4</span><span class="clue">Sweet talks, nothing but sweet talks / Sweet talks, only sweet talks between us / All night long, nothing but sweet, sweet talks</span><span class="ans">Gallan Goodiyaan <i>— Dil Dhadakne Do (2015)</i></span></div>
+        <div class="row"><span class="num">5</span><span class="clue">Round and round and round it goes / Round and round, the red one spins round and round / Spin it round, spin it round, round and round it goes</span><span class="ans">Sanedo <i>— Made in China (2019)</i></span></div>
+        <div class="row"><span class="num">6</span><span class="clue">I have laid my eyelashes across the courtyard path / The queen herself is arriving now / Please come and join the spinning dance with us</span><span class="ans">Ghoomar <i>— Padmaavat (2018)</i></span></div>
+        <div class="row"><span class="num">7</span><span class="clue">If the chili burned you, what am I to do? / If the chili burned you, what can I do? / If the spice made your eyes water, what am I to do?</span><span class="ans">Tujhe Mirchi Lagi Toh <i>— Coolie No. 1 (2020)</i></span></div>
+        <div class="row"><span class="num">8</span><span class="clue">Someone who already aches for you / why make them ache even more, you cruel one? / Someone already lost in your love</span><span class="ans">Zaalima <i>— Raees (2017)</i></span></div>
+        <div class="row"><span class="num">9</span><span class="clue">Like a fierce bull leaping in the dust of the fields / like the lead dancer at the village goddess festival / like twirling sticks while wearing wooden sandals</span><span class="ans">Naacho Naacho <i>— RRR (2022)</i></span></div>
+        <div class="row"><span class="num">10</span><span class="clue">Hold me close, for this beautiful night may never come again / perhaps in this lifetime, we may never meet again / these moments have reached us today only by fate</span><span class="ans">Lag Ja Gale <i>— Woh Kaun Thi (1964)</i></span></div>
+        <div class="row"><span class="num">11</span><span class="clue">O my friend, guide me / Through the darkest night / Show me the way, I'm lost</span><span class="ans">Ya Ali <i>— Gangster (2006)</i></span></div>
+        <div class="row"><span class="num">12</span><span class="clue">I call out to you / Hear my prayer, hear me / I surrender all to you</span><span class="ans">Khwaja Mere Khwaja <i>— Jodhaa Akbar (2008)</i></span></div>
+        <div class="row"><span class="num">13</span><span class="clue">Listen to the call of my heart / Come to me, my dearest / My heart calls out to you</span><span class="ans">Mitwa <i>— Kabhi Alvida Naa Kehna (2006)</i></span></div>
+        <div class="row"><span class="num">14</span><span class="clue">What beauty, what grace / The whole world is watching / What a sight you are</span><span class="ans">Masha-Allah <i>— Saawariya (2007)</i></span></div>
+        <div class="row"><span class="num">15</span><span class="clue">After every sorrow, joy returns / That's how it always is / Life keeps moving on</span><span class="ans">Zindagi Ki Yahi Reet Hai <i>— Mr. India (1987)</i></span></div>
+      </section>
+      <section class="group tie">
+        <h2>⚡ Tie-breaker · Hard · 15 points</h2>
+        <div class="row"><span class="num">★</span><span class="clue">Crackling, sparking, blazing bright / Flashing, swaying, whirling around / Look what became of the enemy</span><span class="ans">Malhari <i>— Bajirao Mastani (2015)</i></span></div>
+      </section>
+      <p class="foot">Shikha &amp; Divy's Diwali Party · Host cheatsheet</p>
+    </div>
+  </body>
+</html>
