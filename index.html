@@ -657,7 +657,7 @@
     <div class="toran" aria-hidden="true"></div>
     <header class="topbar">
       <div class="title-block">
-        <h1>🪔 Shikha &amp; Divy's Diwali Party</h1>
+        <h1 id="partyTitle">🪔 Shikha &amp; Divy's Diwali Party</h1>
         <p class="subtitle">Both party games in one place: Guess the Song and Diwali Jumbled Words, with the same teams and one shared scoreboard. Pick a game below!</p>
       </div>
       <div class="controls">
@@ -677,7 +677,6 @@
           <button id="shuffleEasyBtn" class="gold big" type="button">🎲 Shuffle Easy</button>
           <button id="shuffleMediumBtn" class="gold big" type="button">🎲 Shuffle Medium</button>
           <button id="shuffleHardBtn" class="gold big" type="button">🎲 Shuffle Hard</button>
-          <button id="showTeamsBtn" class="gold big" type="button">👥 Show all teams</button>
           <button id="resetBtn" type="button">↺ Reset game</button>
         </div>
         <div class="contents" id="jumbleControls" hidden>
@@ -693,15 +692,6 @@
       <button id="tabJumble" class="tab" type="button">🔤 Jumbled Words</button>
     </nav>
     <section class="scoreboard" id="scoreboard" aria-label="Team scores"></section>
-    <div id="teamsOverlay" class="teams-overlay" hidden role="dialog" aria-label="All teams">
-      <div class="teams-overlay-inner">
-        <div class="teams-overlay-head">
-          <h2>🪔 All teams — Game 1</h2>
-          <button id="closeTeamsBtn" type="button">✕ Close</button>
-        </div>
-        <div class="teams-grid" id="teamsGrid"></div>
-      </div>
-    </div>
     <section class="tie-bar" aria-label="Tie-breaker">
       <p>🤝 <b>Tied at the top?</b> Play one quick hard song as the decider — first tied team to shout it wins.</p>
       <button id="tieBtn" class="gold" type="button">⚡ Tie-breaker</button>
@@ -1105,21 +1095,13 @@
         { name: "Team Ladoo", color: "#5db3ff" },
         { name: "Team Gulab Jamun", color: "#c77dff" }
       ];
-      /* Game-1 rosters (final, set by Shikha Nov 18 + Arjun/Avanthi Nov 21) —
-         same order as TEAMS above, so the "Show all teams" panel lines up
-         with the scoreboard even if a team name is edited.
-         Jigar (Janal's partner) and Jiger (Dhara's partner) are different people. */
-      var ROSTERS = [
-        ["Jigar (Janal's partner)", "Janal's mom", "Neel", "Neha", "Radhika"],
-        ["Janal", "Janal's dad", "Naisargi", "Swara"],
-        ["Harsh", "Tapan", "Pankaj", "Krinal", "Avanthi"],
-        ["Dipti", "Kush", "Yash", "Jyothsna", "Arjun"],
-        ["Bhavik", "Hemangini", "Varun", "Jiger (Dhara's partner)", "Mitwa"],
-        ["Dhara", "Rushil", "Mrugesh", "Meet", "Mayank"]
-      ];
-      /* ---- Team config: set on the admin page, a #cfg= link, or this
-         browser's saved teams. Falls back to the built-in Dev-Diwali
-         rosters above when nothing is configured. ---- */
+      /* Party title (set on the admin page) — shown in the page title, the
+         big header, and the printable host cheatsheet. */
+      var PARTY_TITLE = "Shikha & Divy's Diwali Party";
+      /* ---- Team config: team names and party title come from the admin
+         page, a #cfg= link, or this browser's saved teams. Falls back to
+         the built-in names when nothing is configured. Member names are
+         not shown on this page, so the game link is safe to share. ---- */
       var TEAM_CFG_KEY = "diwaliGameTeams";
       function loadTeamConfig() {
         var cfg = null;
@@ -1141,7 +1123,12 @@
         if (!cfg) return;
         for (var i = 0; i < 6; i++) {
           TEAMS[i].name = "Team " + cfg.names[i];
-          ROSTERS[i] = cfg.game1[i];
+        }
+        if (cfg.title) {
+          PARTY_TITLE = cfg.title;
+          document.title = cfg.title + ": Guess the Song and Jumbled Words";
+          var h = document.getElementById("partyTitle");
+          if (h) h.textContent = "🪔 " + cfg.title;
         }
       })();
       var CLIP_SECONDS = 30;
@@ -1339,24 +1326,6 @@
           sb.appendChild(card);
         });
       }
-      function buildTeamsOverlay() {
-        var grid = $("teamsGrid");
-        grid.innerHTML = "";
-        for (var i = 0; i < teamCount; i++) {
-          var card = document.createElement("div");
-          card.className = "all-team-card";
-          card.style.setProperty("--team", TEAMS[i].color);
-          var h = document.createElement("h3");
-          h.textContent = TEAMS[i].name;
-          var p = document.createElement("p");
-          p.innerHTML = ROSTERS[i].map(function (n) { return "<b>" + n + "</b>"; }).join(" · ");
-          card.appendChild(h); card.appendChild(p);
-          grid.appendChild(card);
-        }
-      }
-      $("showTeamsBtn").addEventListener("click", function () { buildTeamsOverlay(); $("teamsOverlay").hidden = false; });
-      $("closeTeamsBtn").addEventListener("click", function () { $("teamsOverlay").hidden = true; });
-      document.addEventListener("keydown", function (e) { if (e.key === "Escape") $("teamsOverlay").hidden = true; });
       function renderScores() {
         for (var i = 0; i < TEAMS.length; i++) {
           var el = $("score-" + i);
@@ -1852,7 +1821,7 @@
         var h = document.createElement("h1");
         h.textContent = "Host cheatsheet — Guess the Song: all 45 answers";
         var sub = document.createElement("p");
-        sub.textContent = "Shikha & Divy's Diwali Party · For the host's eyes only — find the song by its board number or English lines, then tap Correct or Wrong on the game screen.";
+        sub.textContent = PARTY_TITLE + " · For the host's eyes only — find the song by its board number or English lines, then tap Correct or Wrong on the game screen.";
         head.appendChild(h);
         head.appendChild(sub);
         sheet.appendChild(head);
@@ -2434,7 +2403,6 @@
         $("tabSong").classList.toggle("active", name === "song");
         $("tabJumble").classList.toggle("active", name === "jumble");
         $("songView").hidden = name !== "song";
-        $("teamsOverlay").hidden = true;
         $("jumbleView").hidden = name !== "jumble";
         $("songControls").hidden = name !== "song";
         $("jumbleControls").hidden = name !== "jumble";

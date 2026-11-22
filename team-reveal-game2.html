@@ -125,7 +125,7 @@
     <div class="toran"></div>
     <div class="wrap">
       <h1>🪔 Find Your Team!</h1>
-      <p class="sub">Shikha &amp; Divy's Diwali Party · Game 2 — Jumbled Words</p>
+      <p class="sub" id="partySub">Shikha &amp; Divy's Diwali Party · Game 2 — Jumbled Words</p>
 
       <!-- Step 1: pick your name -->
       <div id="step-names">
@@ -208,6 +208,11 @@
         TEAMS = {};
         cfg.names.forEach(function (n, i) { TEAMS[n] = cfg.game2[i]; });
         MITHAI = cfg.names.slice();
+        if (cfg.title) {
+          document.title = "Find Your Team — Game 2 · " + cfg.title;
+          var s = document.getElementById("partySub");
+          if (s) s.textContent = cfg.title + " · Game 2 — Jumbled Words";
+        }
       })();
 
       var teamOf = {};

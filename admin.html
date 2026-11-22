@@ -74,17 +74,22 @@
 
     <div class="wrap" id="adminContent" hidden>
       <h1>⚙️ Admin — Teams</h1>
-      <p class="sub">Shikha &amp; Divy's Diwali Party · Set the team names and who's on each team for both games.</p>
+      <p class="sub" id="adminSub">Shikha &amp; Divy's Diwali Party · Set the team names and who's on each team for both games.</p>
       <div class="topbar">
         <a class="btn ghost" href="./index.html">▶ Open the game</a>
         <a class="btn ghost" href="./host.html">🔐 Cheatsheet</a>
       </div>
       <div class="note">
-        <b>How it works:</b> press <b>Save teams</b> and the game, the team-reveal pages and this page will use these teams on <b>this browser</b>.
-        To use them on the TV or another device, use the <b>copy link</b> buttons below and open that link once on that device — it saves the teams there too.
+        <b>How it works:</b> press <b>Save teams</b> and the game (team names + party title), the team-reveal pages (names + members) and this page will use them on <b>this browser</b>.
+        The game page itself no longer shows member names, so the game link is safe to share with friends.
+        To use the teams on the TV or another device, use the <b>copy link</b> buttons below and open that link once on that device — it saves the teams there too.
         Team colours stay tied to the six slots, so renaming a team keeps its colour.
         <br />Flex notes: Pankaj and Mrugesh's extra-team notes on the Game 1 reveal only show if their names stay exactly “Pankaj” and “Mrugesh”.
       </div>
+
+      <h2>Party title</h2>
+      <p class="sub">Shown at the top of the game, the cheatsheet and the team-reveal pages.</p>
+      <div class="name-row"><input id="titleInput" type="text" aria-label="Party title" /></div>
 
       <h2>Team names</h2>
       <p class="sub">Six teams. The game can still be played with 5 or 6 teams — with 5, only the first five are used.</p>
@@ -108,7 +113,7 @@
         <button class="btn ghost" id="copyReveal2Btn" type="button">🔗 Copy reveal link · Game 2</button>
       </div>
       <p class="status" id="status"></p>
-      <p class="foot">Shikha &amp; Divy's Diwali Party · Admin</p>
+      <p class="foot" id="adminFoot">Shikha &amp; Divy's Diwali Party · Admin</p>
     </div>
 
     <script>
@@ -117,6 +122,7 @@
       var COLORS = ["#ff5d7e", "#ff8c42", "#ffd23e", "#7fd08c", "#5db3ff", "#c77dff"];
       /* Original teams, in the game's slot order. */
       var DEFAULTS = {
+        title: "Shikha & Divy's Diwali Party",
         names: ["Kaju Katli", "Jalebi", "Rasgulla", "Barfi", "Ladoo", "Gulab Jamun"],
         game1: [
           ["Jigar (Janal's partner)", "Janal's mom", "Neel", "Neha", "Radhika"],
@@ -158,6 +164,7 @@
         var namesEl = $("names"), g1El = $("game1"), g2El = $("game2");
         namesEl.innerHTML = ""; g1El.innerHTML = ""; g2El.innerHTML = "";
         nameInputs = []; g1Areas = []; g2Areas = [];
+        $("titleInput").value = cfg.title || DEFAULTS.title;
         for (var i = 0; i < 6; i++) {
           var row = document.createElement("div");
           row.className = "name-row";
@@ -188,7 +195,7 @@
         return ta;
       }
       function readForm() {
-        var cfg = { names: [], game1: [], game2: [] };
+        var cfg = { title: $("titleInput").value.trim() || DEFAULTS.title, names: [], game1: [], game2: [] };
         for (var i = 0; i < 6; i++) {
           var n = nameInputs[i].value.trim();
           cfg.names.push(n || DEFAULTS.names[i]);
@@ -217,7 +224,13 @@
       }
 
       function initAdmin() {
-        buildForm(loadCfg() || clone(DEFAULTS));
+        var startCfg = loadCfg() || clone(DEFAULTS);
+        buildForm(startCfg);
+        if (startCfg.title) {
+          document.title = "Admin — Teams · " + startCfg.title;
+          var s = $("adminSub"); if (s) s.textContent = startCfg.title + " · Set the team names and who's on each team for both games.";
+          var f = $("adminFoot"); if (f) f.textContent = startCfg.title + " · Admin";
+        }
         $("saveBtn").addEventListener("click", function () {
           var cfg = readForm();
           var seen = {};

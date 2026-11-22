@@ -76,7 +76,7 @@
     </div>
     <div class="wrap" id="hostContent" hidden>
       <h1>🔐 Host cheatsheet — Guess the Song</h1>
-      <p class="sub">Shikha &amp; Divy's Diwali Party · All 45 answers</p>
+      <p class="sub" id="partySub">Shikha &amp; Divy's Diwali Party · All 45 answers</p>
       <p class="eyes">FOR THE HOST'S EYES ONLY — don't show this screen to the room.</p>
       <div class="topbar">
         <a class="btn" href="./index.html">▶ Open the game</a>
@@ -144,7 +144,7 @@
         <h2>⚡ Tie-breaker · Hard · 15 points</h2>
         <div class="row"><span class="num">★</span><span class="clue">Crackling, sparking, blazing bright / Flashing, swaying, whirling around / Look what became of the enemy</span><span class="ans">Malhari <i>— Bajirao Mastani (2015)</i></span></div>
       </section>
-      <p class="foot">Shikha &amp; Divy's Diwali Party · Host cheatsheet</p>
+      <p class="foot" id="partyFoot">Shikha &amp; Divy's Diwali Party · Host cheatsheet</p>
     </div>
     <script>
       var PASS = "12345";
@@ -165,6 +165,21 @@
         }
         document.getElementById("unlockBtn").addEventListener("click", tryPass);
         document.getElementById("passInput").addEventListener("keydown", function (e) { if (e.key === "Enter") tryPass(); });
+      })();
+      /* Party title (set on the admin page) — read the same team config. */
+      (function applyPartyTitle() {
+        var cfg = null;
+        try {
+          var m = (location.hash || "").match(/#cfg=([A-Za-z0-9\-_]+)/);
+          if (m) cfg = JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g, "+").replace(/_/g, "/")))));
+        } catch (e) {}
+        if (!cfg) { try { cfg = JSON.parse(localStorage.getItem("diwaliGameTeams") || "null"); } catch (e) {} }
+        if (!cfg || !cfg.title) return;
+        document.title = "Host cheatsheet — " + cfg.title;
+        var s = document.getElementById("partySub");
+        if (s) s.textContent = cfg.title + " · All 45 answers";
+        var f = document.getElementById("partyFoot");
+        if (f) f.textContent = cfg.title + " · Host cheatsheet";
       })();
     </script>
   </body>
