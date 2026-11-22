@@ -40,10 +40,18 @@
       .tie { border: 2px solid var(--gold); }
       .tie h2 { color: var(--gold-bright); }
       .foot { margin-top: 30px; font-size: 14px; color: var(--cream-dim); text-align: center; }
+      .lock { max-width: 420px; margin: 18vh auto 0; text-align: center; padding: 0 18px; }
+      .lock h1 { margin-bottom: 4px; }
+      .lock p { color: var(--cream-dim); font-size: 17px; }
+      .lock input { width: 100%; font-family: "Mukta", system-ui, sans-serif; font-size: 20px; text-align: center;
+        letter-spacing: 0.3em; color: var(--cream); background: var(--panel); border: 1px solid var(--line);
+        border-radius: 12px; padding: 12px; margin: 14px 0 10px; outline: none; }
+      .lock input:focus { border-color: var(--gold); }
+      .lock .err { color: var(--pink); font-weight: 700; min-height: 22px; margin: 8px 0 0; }
       @media (max-width: 640px) { .row { flex-wrap: wrap; } .clue, .ans { flex-basis: 100%; } }
       @media print {
         body { background: #fff; color: #111; }
-        .topbar, .foot { display: none; }
+        .topbar, .foot, #lockScreen { display: none; }
         .wrap { max-width: none; padding: 0; }
         h1 { color: #111; font-size: 22px; }
         .sub, .eyes, .clue, .ans i { color: #444; }
@@ -55,13 +63,25 @@
     </style>
   </head>
   <body>
-    <div class="wrap">
+    <!-- Password gate: host-only page. Same password as the admin page (12345).
+         A casual lock for party guests — anyone who views the page source
+         can see the password, so it is not real security. -->
+    <div class="lock" id="lockScreen" style="display:none">
+      <h1>🔐 Host cheatsheet</h1>
+      <p>Enter the host password to see the answers.</p>
+      <input id="passInput" type="password" inputmode="numeric" autocomplete="off" placeholder="•••••" />
+      <br />
+      <button class="btn" id="unlockBtn" type="button">Unlock</button>
+      <p class="err" id="lockErr"></p>
+    </div>
+    <div class="wrap" id="hostContent" hidden>
       <h1>🔐 Host cheatsheet — Guess the Song</h1>
       <p class="sub">Shikha &amp; Divy's Diwali Party · All 45 answers</p>
       <p class="eyes">FOR THE HOST'S EYES ONLY — don't show this screen to the room.</p>
       <div class="topbar">
         <a class="btn" href="./index.html">▶ Open the game</a>
         <button class="btn ghost" type="button" onclick="window.print()">🖨 Print cheatsheet</button>
+        <a class="btn ghost" href="./admin.html">⚙️ Admin — teams</a>
       </div>
       <div class="rules">
         <b>Rules reminder:</b> Scoring — Easy <b>5</b> · Medium <b>10</b> · Hard <b>15</b>. One hint per song (movie + year) <b>halves the points</b> (Easy 3 · Medium 5 · Hard 8). After a miss or timeout, the next team can <b>steal for half points</b>. <span class="gold">A correct answer gets a clap, and every miss gets a short 1-second wrong-answer sting.</span> Tie-breaker win is worth <b>15 points</b>. Find a song by its board number or English lines, then tap Correct or Missed on the game screen.
@@ -126,5 +146,26 @@
       </section>
       <p class="foot">Shikha &amp; Divy's Diwali Party · Host cheatsheet</p>
     </div>
+    <script>
+      var PASS = "12345";
+      function unlockHost() {
+        try { sessionStorage.setItem("diwaliUnlocked", "1"); } catch (e) {}
+        document.getElementById("lockScreen").style.display = "none";
+        document.getElementById("hostContent").hidden = false;
+      }
+      (function () {
+        var ok = false;
+        try { ok = sessionStorage.getItem("diwaliUnlocked") === "1"; } catch (e) {}
+        if (ok) { unlockHost(); return; }
+        document.getElementById("lockScreen").style.display = "block";
+        document.getElementById("passInput").focus();
+        function tryPass() {
+          if (document.getElementById("passInput").value === PASS) { unlockHost(); }
+          else { document.getElementById("lockErr").textContent = "Wrong password — try again."; document.getElementById("passInput").select(); }
+        }
+        document.getElementById("unlockBtn").addEventListener("click", tryPass);
+        document.getElementById("passInput").addEventListener("keydown", function (e) { if (e.key === "Enter") tryPass(); });
+      })();
+    </script>
   </body>
 </html>

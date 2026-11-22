@@ -187,6 +187,32 @@
       };
       var MITHAI = ["Ladoo", "Barfi", "Jalebi", "Kaju Katli", "Rasgulla", "Gulab Jamun"];
 
+      /* ---- Team config: set on the admin page, a #cfg= link, or this
+         browser's saved teams. Falls back to the built-in rosters above. ---- */
+      var TEAM_CFG_KEY = "diwaliGameTeams";
+      function loadTeamConfig() {
+        var cfg = null;
+        try {
+          var m = (location.hash || "").match(/#cfg=([A-Za-z0-9\-_]+)/);
+          if (m) cfg = JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g, "+").replace(/_/g, "/")))));
+        } catch (e) { cfg = null; }
+        if (!cfg) {
+          try { cfg = JSON.parse(localStorage.getItem(TEAM_CFG_KEY) || "null"); } catch (e) { cfg = null; }
+        }
+        if (cfg && cfg.names && cfg.game1 && cfg.game2 && cfg.names.length === 6 && cfg.game1.length === 6 && cfg.game2.length === 6) {
+          try { localStorage.setItem(TEAM_CFG_KEY, JSON.stringify(cfg)); } catch (e) {}
+          return cfg;
+        }
+        return null;
+      }
+      (function applyTeamConfig() {
+        var cfg = loadTeamConfig();
+        if (!cfg) return;
+        TEAMS = {};
+        cfg.names.forEach(function (n, i) { TEAMS[n] = cfg.game1[i]; });
+        MITHAI = cfg.names.slice();
+      })();
+
       var teamOf = {};
       Object.keys(TEAMS).forEach(function (team) {
         TEAMS[team].forEach(function (name) { teamOf[name] = team; });

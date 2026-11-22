@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>Admin — Teams · Shikha &amp; Divy's Diwali Party</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Mukta:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #22060a; --bg2: #35090f; --panel: #3d0d16; --panel2: #4a1220;
+        --gold: #e9b949; --gold-bright: #ffd970; --cream: #fdf3d8; --cream-dim: #d9c9a3;
+        --marigold: #ff8c42; --pink: #ff5d7e; --line: rgba(233, 185, 73, 0.35);
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; font-family: "Mukta", system-ui, sans-serif; color: var(--cream);
+        background: linear-gradient(180deg, var(--bg2), var(--bg)); min-height: 100vh; }
+      .wrap { max-width: 860px; margin: 0 auto; padding: 22px 18px 60px; }
+      h1 { font-family: "Rozha One", serif; color: var(--gold-bright); font-size: clamp(28px, 6vw, 40px); margin: 6px 0 2px; line-height: 1.15; }
+      h2 { font-family: "Rozha One", serif; color: var(--gold-bright); font-size: 24px; margin: 26px 0 4px; }
+      h2 .tag { font-family: "Mukta", system-ui, sans-serif; font-size: 14px; color: var(--cream-dim); font-weight: 600; }
+      .sub { color: var(--cream-dim); font-size: 16.5px; margin: 0 0 4px; line-height: 1.55; }
+      .note { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; margin: 14px 0; font-size: 15.5px; line-height: 1.6; color: var(--cream-dim); }
+      .note b { color: var(--cream); }
+      .topbar { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0 6px; }
+      a.btn, button.btn { font-family: "Mukta", system-ui, sans-serif; font-size: 16px; font-weight: 800;
+        color: #22060a; background: var(--gold); border: none; border-radius: 999px; padding: 10px 20px;
+        cursor: pointer; text-decoration: none; display: inline-block; }
+      a.btn.ghost, button.btn.ghost { color: var(--cream-dim); background: transparent; border: 1px solid var(--line); }
+      button.btn.danger { color: var(--cream); background: transparent; border: 1px solid var(--pink); }
+      .name-row { display: flex; align-items: center; gap: 12px; background: var(--panel); border: 1px solid var(--line);
+        border-radius: 10px; padding: 10px 14px; margin-bottom: 8px; }
+      .dot { flex: 0 0 18px; width: 18px; height: 18px; border-radius: 50%; }
+      .name-row input { flex: 1; font-family: "Mukta", system-ui, sans-serif; font-size: 18px; font-weight: 700;
+        color: var(--cream); background: transparent; border: none; border-bottom: 1px dashed var(--line);
+        padding: 4px 2px; outline: none; min-width: 0; }
+      .name-row input:focus { border-bottom-color: var(--gold); }
+      .team-card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; }
+      .team-card h3 { margin: 0 0 6px; font-size: 18px; color: var(--gold-bright); display: flex; align-items: center; gap: 8px; }
+      .team-card h3 .dot { flex-basis: 14px; width: 14px; height: 14px; }
+      .team-card textarea { width: 100%; min-height: 96px; font-family: "Mukta", system-ui, sans-serif; font-size: 16px;
+        line-height: 1.55; color: var(--cream); background: var(--panel2); border: 1px solid var(--line);
+        border-radius: 8px; padding: 10px 12px; resize: vertical; outline: none; }
+      .team-card textarea:focus { border-color: var(--gold); }
+      .team-card .hint { font-size: 13.5px; color: var(--cream-dim); margin: 6px 0 0; }
+      .status { margin: 14px 0; font-size: 16.5px; font-weight: 700; min-height: 24px; }
+      .status.ok { color: var(--gold-bright); }
+      .status.err { color: var(--pink); }
+      .foot { margin-top: 30px; font-size: 14px; color: var(--cream-dim); text-align: center; }
+      /* Lock screen */
+      .lock { max-width: 420px; margin: 18vh auto 0; text-align: center; padding: 0 18px; }
+      .lock h1 { margin-bottom: 4px; }
+      .lock p { color: var(--cream-dim); font-size: 17px; }
+      .lock input { width: 100%; font-family: "Mukta", system-ui, sans-serif; font-size: 20px; text-align: center;
+        letter-spacing: 0.3em; color: var(--cream); background: var(--panel); border: 1px solid var(--line);
+        border-radius: 12px; padding: 12px; margin: 14px 0 10px; outline: none; }
+      .lock input:focus { border-color: var(--gold); }
+      .lock .err { color: var(--pink); font-weight: 700; min-height: 22px; margin: 8px 0 0; }
+      @media print { .lock { display: none !important; } }
+    </style>
+  </head>
+  <body>
+    <!-- Password gate: same password as the host cheatsheet (12345).
+         This is a casual lock for party guests — anyone who views the page
+         source can see the password, so it is not real security. -->
+    <div class="lock" id="lockScreen" style="display:none">
+      <h1>🔐 Admin</h1>
+      <p>Enter the host password to set up teams.</p>
+      <input id="passInput" type="password" inputmode="numeric" autocomplete="off" placeholder="•••••" />
+      <br />
+      <button class="btn" id="unlockBtn" type="button">Unlock</button>
+      <p class="err" id="lockErr"></p>
+    </div>
+
+    <div class="wrap" id="adminContent" hidden>
+      <h1>⚙️ Admin — Teams</h1>
+      <p class="sub">Shikha &amp; Divy's Diwali Party · Set the team names and who's on each team for both games.</p>
+      <div class="topbar">
+        <a class="btn ghost" href="./index.html">▶ Open the game</a>
+        <a class="btn ghost" href="./host.html">🔐 Cheatsheet</a>
+      </div>
+      <div class="note">
+        <b>How it works:</b> press <b>Save teams</b> and the game, the team-reveal pages and this page will use these teams on <b>this browser</b>.
+        To use them on the TV or another device, use the <b>copy link</b> buttons below and open that link once on that device — it saves the teams there too.
+        Team colours stay tied to the six slots, so renaming a team keeps its colour.
+        <br />Flex notes: Pankaj and Mrugesh's extra-team notes on the Game 1 reveal only show if their names stay exactly “Pankaj” and “Mrugesh”.
+      </div>
+
+      <h2>Team names</h2>
+      <p class="sub">Six teams. The game can still be played with 5 or 6 teams — with 5, only the first five are used.</p>
+      <div id="names"></div>
+
+      <h2>Game 1 — Guess the Song <span class="tag">rosters</span></h2>
+      <p class="sub">One name per line. The order inside a team doesn't matter.</p>
+      <div id="game1"></div>
+
+      <h2>Game 2 — Jumbled Words <span class="tag">rosters</span></h2>
+      <p class="sub">One name per line. This is the reshuffled set — nobody on the same-named team as Game 1.</p>
+      <div id="game2"></div>
+
+      <div class="topbar" style="margin-top:22px">
+        <button class="btn" id="saveBtn" type="button">💾 Save teams</button>
+        <button class="btn danger" id="resetBtn" type="button">↩ Reset to original teams</button>
+      </div>
+      <div class="topbar">
+        <button class="btn ghost" id="copyGameBtn" type="button">🔗 Copy game link with these teams</button>
+        <button class="btn ghost" id="copyReveal1Btn" type="button">🔗 Copy reveal link · Game 1</button>
+        <button class="btn ghost" id="copyReveal2Btn" type="button">🔗 Copy reveal link · Game 2</button>
+      </div>
+      <p class="status" id="status"></p>
+      <p class="foot">Shikha &amp; Divy's Diwali Party · Admin</p>
+    </div>
+
+    <script>
+      var PASS = "12345";
+      var CFG_KEY = "diwaliGameTeams";
+      var COLORS = ["#ff5d7e", "#ff8c42", "#ffd23e", "#7fd08c", "#5db3ff", "#c77dff"];
+      /* Original teams, in the game's slot order. */
+      var DEFAULTS = {
+        names: ["Kaju Katli", "Jalebi", "Rasgulla", "Barfi", "Ladoo", "Gulab Jamun"],
+        game1: [
+          ["Jigar (Janal's partner)", "Janal's mom", "Neel", "Neha", "Radhika"],
+          ["Janal", "Janal's dad", "Naisargi", "Swara"],
+          ["Harsh", "Tapan", "Pankaj", "Krinal", "Avanthi"],
+          ["Dipti", "Kush", "Yash", "Jyothsna", "Arjun"],
+          ["Bhavik", "Hemangini", "Varun", "Jiger (Dhara's partner)", "Mitwa"],
+          ["Dhara", "Rushil", "Mrugesh", "Meet", "Mayank"]
+        ],
+        game2: [
+          ["Mitwa", "Jyothsna", "Rushil", "Janal's dad", "Harsh"],
+          ["Avanthi", "Meet", "Jiger (Dhara's partner)", "Yash", "Neha"],
+          ["Janal", "Janal's mom", "Varun", "Mayank", "Dipti"],
+          ["Hemangini", "Swara", "Mrugesh", "Pankaj", "Neel"],
+          ["Naisargi", "Dhara", "Arjun", "Jigar (Janal's partner)", "Tapan"],
+          ["Kush", "Krinal", "Bhavik", "Radhika"]
+        ]
+      };
+
+      function $(id) { return document.getElementById(id); }
+      function encodeCfg(cfg) {
+        return btoa(unescape(encodeURIComponent(JSON.stringify(cfg))))
+          .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+      }
+      function loadCfg() {
+        var cfg = null;
+        try {
+          var m = (location.hash || "").match(/#cfg=([A-Za-z0-9\-_]+)/);
+          if (m) cfg = JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g, "+").replace(/_/g, "/")))));
+        } catch (e) { cfg = null; }
+        if (!cfg) { try { cfg = JSON.parse(localStorage.getItem(CFG_KEY) || "null"); } catch (e) { cfg = null; } }
+        if (cfg && cfg.names && cfg.game1 && cfg.game2 && cfg.names.length === 6 && cfg.game1.length === 6 && cfg.game2.length === 6) return cfg;
+        return null;
+      }
+      function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+      var nameInputs = [], g1Areas = [], g2Areas = [];
+      function buildForm(cfg) {
+        var namesEl = $("names"), g1El = $("game1"), g2El = $("game2");
+        namesEl.innerHTML = ""; g1El.innerHTML = ""; g2El.innerHTML = "";
+        nameInputs = []; g1Areas = []; g2Areas = [];
+        for (var i = 0; i < 6; i++) {
+          var row = document.createElement("div");
+          row.className = "name-row";
+          var dot = document.createElement("span");
+          dot.className = "dot"; dot.style.background = COLORS[i];
+          var inp = document.createElement("input");
+          inp.type = "text"; inp.value = cfg.names[i]; inp.setAttribute("aria-label", "Team " + (i + 1) + " name");
+          row.appendChild(dot); row.appendChild(inp);
+          namesEl.appendChild(row);
+          nameInputs.push(inp);
+          g1Areas.push(makeCard(g1El, i, cfg, "game1"));
+          g2Areas.push(makeCard(g2El, i, cfg, "game2"));
+        }
+      }
+      function makeCard(parent, i, cfg, key) {
+        var card = document.createElement("div");
+        card.className = "team-card";
+        var h = document.createElement("h3");
+        var dot = document.createElement("span");
+        dot.className = "dot"; dot.style.background = COLORS[i];
+        h.appendChild(dot);
+        h.appendChild(document.createTextNode("Team " + cfg.names[i]));
+        var ta = document.createElement("textarea");
+        ta.value = cfg[key][i].join("\n");
+        ta.setAttribute("aria-label", "Team " + cfg.names[i] + " members, one per line");
+        card.appendChild(h); card.appendChild(ta);
+        parent.appendChild(card);
+        return ta;
+      }
+      function readForm() {
+        var cfg = { names: [], game1: [], game2: [] };
+        for (var i = 0; i < 6; i++) {
+          var n = nameInputs[i].value.trim();
+          cfg.names.push(n || DEFAULTS.names[i]);
+          cfg.game1.push(g1Areas[i].value.split("\n").map(function (s) { return s.trim(); }).filter(Boolean));
+          cfg.game2.push(g2Areas[i].value.split("\n").map(function (s) { return s.trim(); }).filter(Boolean));
+        }
+        return cfg;
+      }
+      function setStatus(msg, ok) {
+        var el = $("status");
+        el.textContent = msg;
+        el.className = "status " + (ok ? "ok" : "err");
+      }
+      function copyText(text, label) {
+        function done() { setStatus("✅ " + label + " copied — open it on the TV or other device and the teams save there.", true); }
+        function fallback() {
+          var ta = document.createElement("textarea");
+          ta.value = text; document.body.appendChild(ta); ta.select();
+          try { document.execCommand("copy"); done(); }
+          catch (e) { setStatus("Couldn't copy automatically — long-press the link instead.", false); }
+          document.body.removeChild(ta);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, fallback);
+        } else fallback();
+      }
+
+      function initAdmin() {
+        buildForm(loadCfg() || clone(DEFAULTS));
+        $("saveBtn").addEventListener("click", function () {
+          var cfg = readForm();
+          var seen = {};
+          for (var i = 0; i < 6; i++) {
+            if (seen[cfg.names[i]]) { setStatus("Two teams can't share the name “" + cfg.names[i] + "” — rename one first.", false); return; }
+            seen[cfg.names[i]] = true;
+          }
+          try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch (e) {}
+          buildForm(cfg);
+          setStatus("✅ Saved — the game and team-reveal pages on this browser now use these teams.", true);
+        });
+        $("resetBtn").addEventListener("click", function () {
+          try { localStorage.removeItem(CFG_KEY); } catch (e) {}
+          buildForm(clone(DEFAULTS));
+          setStatus("↩ Back to the original Dev-Diwali teams.", true);
+        });
+        $("copyGameBtn").addEventListener("click", function () {
+          copyText(new URL("index.html", location.href).toString() + "#cfg=" + encodeCfg(readForm()), "Game link");
+        });
+        $("copyReveal1Btn").addEventListener("click", function () {
+          copyText(new URL("team-reveal.html", location.href).toString() + "#cfg=" + encodeCfg(readForm()), "Game 1 reveal link");
+        });
+        $("copyReveal2Btn").addEventListener("click", function () {
+          copyText(new URL("team-reveal-game2.html", location.href).toString() + "#cfg=" + encodeCfg(readForm()), "Game 2 reveal link");
+        });
+      }
+
+      /* ---- Password gate (shared with host.html) ---- */
+      function unlock() {
+        try { sessionStorage.setItem("diwaliUnlocked", "1"); } catch (e) {}
+        $("lockScreen").style.display = "none";
+        $("adminContent").hidden = false;
+        initAdmin();
+      }
+      (function () {
+        var ok = false;
+        try { ok = sessionStorage.getItem("diwaliUnlocked") === "1"; } catch (e) {}
+        if (ok) { unlock(); return; }
+        $("lockScreen").style.display = "block";
+        $("passInput").focus();
+        function tryPass() {
+          if ($("passInput").value === PASS) { unlock(); }
+          else { $("lockErr").textContent = "Wrong password — try again."; $("passInput").select(); }
+        }
+        $("unlockBtn").addEventListener("click", tryPass);
+        $("passInput").addEventListener("keydown", function (e) { if (e.key === "Enter") tryPass(); });
+      })();
+    </script>
+  </body>
+</html>
